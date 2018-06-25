@@ -1,0 +1,25 @@
+{% extends "course/base.html"%}
+
+    		{% block collection %}    		
+    			<ul class="collection">			    
+				    <li class="collection-item avatar">
+					    <i class="material-icons circle red darken-3"><span class="icon-user-tie"></span></i>
+					    <span class="title red-text text-darken-3" style="font-weight: 500;">{{ user.first_name }} {{ user.last_name }} Daniel Barragán</span>
+					    <p>
+					        Id:  {{ user.username }}<br>
+					        E-mail:  {{ user.email }} macripco1311@gmail.com <br>					        
+					    </p>				      
+				    </li>			    
+			 	</ul>    		
+    		{% endblock%}
+
+    		
+    		{% block title%}
+    		<div class="row">
+    			<h5 style="color:#424242;">Create a New Course</h5>
+    		</div>
+    		{% endblock%}
+
+    		{% block content%}
+
+    		{% endblock %}   

@@ -1,0 +1,71 @@
+{% extends "course/base.html" %}
+
+            {% block navbar %}
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/log/"><i class="material-icons">account_circle</i></a></li>                
+            </ul>
+            {% endblock %} 
+              
+
+            {% block title %}
+            <div class="row">
+                <h5 style="color:#424242;">Courses</h5>
+            </div>
+            {% endblock %}
+            
+
+
+
+    		{% block content %}
+            <form id="select_ap_form">
+                <div class="row">
+                    <div class="input-field">
+                        <select id="select_academic_period">
+                            {% for ap in academic_period_choice %}
+                            <option value="{{ ap.0 }}">{{ ap.1 }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="select_academic_period.id_for_label">Academics Periods</label>
+                    </div>                    
+                </div>
+                <div class="row">
+                    <div class="center">
+                        <button id="btn-select-pa" class="btn waves-effect waves-light red darken-4">Search
+                            <i class="material-icons right">search</i>
+                        </button>                   
+                    </div>                    
+                </div>                                     
+            </form>
+            <label>{{ courses_in_period }}</label>
+            {% for course in courses_in_period %}
+            <label>{{ var }}</label>
+            {% endfor %}
+
+
+            <div class="row">
+                <table class="bordered responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Group</th>
+                            <th>Professor</th>
+                            <th></th>                           
+                        </tr>                       
+                    </thead>
+                    <!--tbody>
+                        #{% for course in courses_in_period %}
+                        <tr>
+                            <td>#{{ course.0 }}</td>
+                            <td>#{{ course.name_course }}</td>
+                            <td>#{{ course.group_course }}</td>
+                            <td>#{{ course.professor_course }}</td>
+                            <td>
+                                <a href="#{{ course.id_course}}/enroll"><span class="new badge red darken-4" data-badge-caption="Enroll"></a>
+                            </td>                           
+                        </tr>
+                    {% endfor %}                        
+                    </tbody-->
+                </table>                            
+            </div>
+            {% endblock %}

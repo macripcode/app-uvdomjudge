@@ -1,0 +1,214 @@
+{% extends "profile/base.html"%}
+
+
+            
+
+            {% block navbar %}
+            <ul class="right hide-on-med-and-down">                 
+                <li><a href="/uvdomjudge/logout/"><span class="icon-exit"></span></a></li>
+            </ul>
+            {% endblock %} 
+
+
+            {% block collection %}          
+                <ul class="collection">             
+                    <li class="collection-item avatar">
+                        <i class="material-icons circle red darken-3"><span class="icon-user-tie"></span></i>
+                        <span class="title red-text text-darken-3" style="font-weight: 500;"><span id={{user.first_name}}>{{ user.first_name }}</span> <span id={{user.last_name}}>{{ user.last_name }}</span></span>
+                        <p>
+                            Identification:  <span id="{{ user.id }}">{{ user.id }}</span><br>
+                            Username:        <span id={{user.username}}>{{ user.username }}</span><br>
+                            E-mail:          <span id={{user.email}}>{{ user.email }}</span><br>                           
+                        </p>                      
+                    </li>               
+                </ul>           
+            {% endblock %}
+
+
+    		{% block title%}    		
+    			<h5 style="color:#424242;">Administrator's Profile</h5>
+    		{% endblock%}
+
+            {% block options %}
+            <!--li>
+                <div class="collapsible-header"><i class="material-icons">settings</i>Settings</div>
+                <div class="collapsible-body">
+                    <form id="config_profile_form" method ='POST' action=".">
+                        {% csrf_token %}
+                        {{ config_profile_form.as_p }}
+                        <div class="row">
+                    <div class="center">
+
+                        <button id="btn_settings_submit" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('config_profile_form').submit(); return false;">Create
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </div>
+
+                    </form>
+                </div>
+            </li-->
+            <li>
+                <div class="collapsible-header"><i class="material-icons">person_add</i>Create User</div>
+                <div class="collapsible-body">
+
+                    <form id="create_user_form" method ='POST' action=".">
+                {% csrf_token %}
+                        <!--Type User-->
+                        <div class="row">
+                            <div class="input-field">
+                                {{ create_user_form.type_user}}
+                                <label for="{{ create_user_form.type_user.id_for_label }}">Type User</label>
+                            </div>
+                        </div>
+                        <!--Type User-->
+
+                        <!--Username-->
+                        <div class="row">
+                            <div class="input-field">
+                              {{ create_user_form.username}}
+                              <label for="{{ create_user_form.username.id_for_label }}">Username</label>
+                            </div>                                            
+                        </div>
+                        <!--Username-->
+
+                        <!--First Name-->
+                        <div class="row">
+                            <div class="input-field">
+                              {{ create_user_form.first_name}}
+                              <label for="{{ create_user_form.first_name.id_for_label }}">First Name</label>
+                            </div>                                            
+                        </div>
+                        <!--First Name-->
+
+                        <!--Last Name-->
+                        <div class="row">
+                            <div class="input-field">
+                              {{ create_user_form.last_name}}
+                              <label for="{{ create_user_form.last_name.id_for_label }}">Last Name</label>
+                            </div>                                            
+                        </div>
+                        <!--Last Name-->
+
+                        <!--Email-->
+                        <div class="row">
+                            <div class="input-field">
+                              {{ create_user_form.email}}
+                              <label for="{{ create_user_form.email.id_for_label }}">Email</label>
+                            </div>                                            
+                        </div>
+                        <!--Email-->
+
+                        <!--Id-->
+                        <div class="row">
+                            <div class="input-field">
+                              {{ create_user_form.id}}
+                              <label for="{{ create_user_form.id.id_for_label }}">Identification</label>
+                            </div>                                            
+                        </div>
+                        <!--Id-->
+
+                        <!--Password-->
+                        <div class="row">
+                            <div class="input-field">
+                              {{ create_user_form.password}}
+                              <label for="{{ create_user_form.password.id_for_label }}">Password</label>
+                            </div>                                                                       
+                        </div>
+                        <!--Password-->
+
+                        <!--Retype Password-->
+                        <div class="row">
+                            <div class="input-field">
+                              <input id="password_retype_input" type="password" class="validate">
+                              <label for="password" >Retype Password</label>
+                            </div>                                                                      
+                        </div>
+                        <!--Retype Password-->
+
+                        <!--Button Create-->
+                        <div class="row">
+                            <div class="center">
+
+                                <button id="btn_create_user_submit" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('create_user_form').submit(); return false;">Create
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>                  
+                        </div>                          
+                        <!--Button Create-->                 
+
+
+
+
+                    </form>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">storage</i>Period's backups </div>
+                <div class="collapsible-body">
+
+                    <form id="create_backups_form" >
+                
+
+                    <p>Select academics periods:</p>
+
+                    {% for period in academic_periods %}
+
+                    <p>
+                        <input type="checkbox" id="{{period.id_academic_period}}_checkbox" value="{{period.id_academic_period}}" />
+                        <label for="{{period.id_academic_period}}_checkbox">{{ period.name_academic_period }}</label>
+                    </p>
+
+                    {% endfor %}
+
+                    <p id="respuesta_ajax"></p>
+
+                    <!--Button Create-->
+                    <div class="row">
+                        <div class="center">
+
+                            <button id="btn_create_backups_submit" class="btn waves-effect waves-light red darken-4">Create
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>                  
+                    </div>                          
+                    <!--Button Create-->                    
+
+                    </form>
+
+                </div>
+            </li>
+            {% endblock %}
+
+
+
+            
+
+    		{% block content%}
+
+			<!--display forms errors-->
+			{% if log_in_form.errors %}
+				{% for field in log_in_form %}
+					{% for error in field.errors %}
+						<div class="card-panel red lighten-4">
+	                        <span>{{ error|escape }}</span>
+	                    </div>
+					{% endfor %}
+				{% endfor %}
+				{% for error in log_in_form.non_field_errors %}
+						<div class="card-panel red lighten-4">
+	                        <span>{{ error|escape }}</span>
+	                    </div>
+				{% endfor %}
+			{% endif %}
+			<!--display forms errors-->            
+                
+            
+                               
+            
+                                
+            
+
+    		    		
+    		{% endblock %}   

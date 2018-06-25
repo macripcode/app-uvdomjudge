@@ -1,0 +1,121 @@
+/* label color */
+
+/*Red Color
+
+#b71c1c red darken-4
+
+  Gray Color letters
+
+#424242 grey darken-3
+
+*/
+
+.input-field label {
+ color: #b71c1c;
+}
+
+
+.dropdown-content li > a, .dropdown-content li > span {
+  font-size: 16px;
+  color: #424242;
+  display: block;
+  line-height: 22px;
+  padding: 14px 16px;
+}
+
+input:not([type]):focus:not([readonly]) + label,
+input[type=text]:not(.browser-default):focus:not([readonly]) + label,
+input[type=password]:not(.browser-default):focus:not([readonly]) + label,
+input[type=email]:not(.browser-default):focus:not([readonly]) + label,
+input[type=url]:not(.browser-default):focus:not([readonly]) + label,
+input[type=time]:not(.browser-default):focus:not([readonly]) + label,
+input[type=date]:not(.browser-default):focus:not([readonly]) + label,
+input[type=datetime]:not(.browser-default):focus:not([readonly]) + label,
+input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label,
+input[type=tel]:not(.browser-default):focus:not([readonly]) + label,
+input[type=number]:not(.browser-default):focus:not([readonly]) + label,
+input[type=search]:not(.browser-default):focus:not([readonly]) + label,
+textarea.materialize-textarea:focus:not([readonly]) + label {
+  color: #424242;
+}
+
+input:not([type]):focus:not([readonly]),
+input[type=text]:not(.browser-default):focus:not([readonly]),
+input[type=password]:not(.browser-default):focus:not([readonly]),
+input[type=email]:not(.browser-default):focus:not([readonly]),
+input[type=url]:not(.browser-default):focus:not([readonly]),
+input[type=time]:not(.browser-default):focus:not([readonly]),
+input[type=date]:not(.browser-default):focus:not([readonly]),
+input[type=datetime]:not(.browser-default):focus:not([readonly]),
+input[type=datetime-local]:not(.browser-default):focus:not([readonly]),
+input[type=tel]:not(.browser-default):focus:not([readonly]),
+input[type=number]:not(.browser-default):focus:not([readonly]),
+input[type=search]:not(.browser-default):focus:not([readonly]),
+textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #424242;
+  -webkit-box-shadow: 0 1px 0 0 #424242;
+          box-shadow: 0 1px 0 0 #424242;
+}
+
+
+/* label focus color */
+.input-field input[type=text]:focus + label {
+ color: #b71c1c;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+ border-bottom: 1px solid #000;
+ box-shadow: 0 1px 0 0 #000;
+}
+
+/*div login*/
+#div_log_in{
+    padding: 50px;
+}
+
+#nav-bar {
+    color: #fff;
+    background-color: #b71c1c;    
+}
+
+#actions_professor_profile a.collection-item {    
+    color: #424242;
+}
+#actions_professor_profile .collection-item.active {
+    background-color: #b71c1c;
+    color: #eafaf9;
+}
+
+#actions_professor_profile a.collection-item:not(.active):hover {
+    background-color: #b71c1c;
+    color: #eafaf9;
+}
+
+ul#actions_professor_profile li a i {
+  color: #b71c1c
+}
+
+ul#actions_professor_profile li a i:hover {
+  color: #424242;
+  -webkit-transition: color .25s; /* Safari */
+  transition: color .25s;
+}
+
+[type="checkbox"]:checked + label:before {
+  top: -4px;
+  left: -5px;
+  width: 12px;
+  height: 22px;
+  border-top: 2px solid transparent;
+  border-left: 2px solid transparent;
+  border-right: 2px solid #b71c1c;
+  border-bottom: 2px solid #b71c1c;
+  -webkit-transform: rotate(40deg);
+          transform: rotate(40deg);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform-origin: 100% 100%;
+          transform-origin: 100% 100%;
+}
+
+

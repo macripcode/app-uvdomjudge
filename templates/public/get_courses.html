@@ -1,0 +1,53 @@
+{% extends "course/base.html" %}
+
+            {% block navbar %}
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/uvdomjudge/login/"><i class="material-icons">account_circle</i></a></li>
+            </ul>
+            {% endblock %} 
+              
+
+            {% block title %}
+            <div class="row">
+                <h5 style="color:#424242;">Current Courses</h5>
+            </div>
+            {% endblock %}
+            
+
+
+
+    		{% block content %}
+
+
+
+
+            <div class="row">
+                <table class="bordered responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Group</th>
+                            <th>Professor</th>
+                            <th>Url</th>
+                        </tr>                       
+                    </thead>
+                    <tbody>
+                        {% for course in current_courses %}
+                        <tr>
+                            <td>{{ course.code_course }}</td>
+                            <td>{{ course.name_course }}</td>
+                            <td>{{ course.group_course }}</td>
+                            <td>{{ course.professor_name }}</td>
+                            <td>
+                                <a href="{{ course.url }}" target="_blank">{{ course.url }}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'enroll_course' id_course=course.id_course %}" target="_blank"><span class="new badge red darken-4" data-badge-caption="Enroll"></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                            
+            </div>
+            {% endblock %}

@@ -1,0 +1,231 @@
+"""
+import requests
+
+{
+	"username":"root",
+	"password":"macripco"
+}
+response= requests.post("http://127.0.0.1:8000/rest-auth/login/", json=data)
+
+
+
+{"username": "root","email": "macripco1311@gmail.com","password": "macripco"}
+
+
+
+
+url = "http://127.0.0.1:8000/uv-domjudge/v1/periods/"
+
+
+headers = {'content-type': "application/json",'authorization': "Token 35ec2d219341676289e48389a5036666b3b3a1ca",'cache-control': "no-cache"  }
+
+response = requests.request("GET", url, headers=headers)
+response.json()
+
+
+print(response.text)
+
+pedir el token
+
+a = Token.objects.get(key='35ec2d219341676289e48389a5036666b3b3a1ca')
+
+pedir el id de usuario
+
+a.user_id
+
+url = "http://127.0.0.1:8000/uv-domjudge/v1/periods/"
+>>> headers = {'content-type': "application/json",'authorization': "Token 35ec2d219341676289e48389a5036666b3b3a1ca",'cache-control': "no-cache"  }
+>>> response = requests.request("GET", url, headers=headers)
+>>> response.json()
+
+
+
+
+"""
+
+
+
+"""class UserSerializer(serializers.ModelSerializer):
+    type_user = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'type_user'
+        )
+
+from login.api.serializers import UserBan
+data={"id":"1","username":"holita","first_name":"hey", "last_name":"hola", "email":"macripco@gmail.com", "type_user": "1" }
+ser=UserBan(data=data)
+ser.is_valid()
+
+
+"""
+
+"""
+perm_tuple = [(x.id, x.name) for x in Permission.objects.filter(user=b)]
+>>> perm_tuple
+
+"""
+
+
+
+
+"""
+from login.api.serializers import UserSerializer
+from django.contrib.auth.models import User
+b=User.objects.get(id=3)
+b
+<User: Hola>
+ser=UserSerializer(instance=b)
+ser.data
+
+
+
+"""
+
+
+"""class UserPermissionSerializer(serializers.Serializer):
+    user = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    #permissions=
+"""
+
+
+
+"""
+from login.api.serializers import PermissionSerializer
+from login.api.serializers import UserSerializer
+from django.contrib.auth.models import Permission
+from django.contrib.auth.models import User
+>>>b = Permission.objects.all()
+b = Permission.objects.get(name='professor')
+serializer = PermissionSerializer(instance=b)
+serializer.data
+{'id': 43, 'name': 'professor', 'codename': 'professor', 'content_type': 4}
+
+
+from login.api.serializers import UserSerializer
+from django.contrib.auth.models import User
+b = User.objects.get(id=3)
+>>> b
+<User: Hola>
+ser = UserSerializer(instance=b)
+ser.data
+
+
+
+
+"""
+|----------------------------------->
+    USER
+|----------------------------------->
+# CREATE USER #
+
+from django.contrib.auth.models import User
+user = User(username='macripco', first_name='María Cristina', last_name='Portilla Cortés', email='macripco1311@gmail.com',id='1144049795')
+user.set_password('macripco')
+user.save()
+
+# GENERATE TOKEN
+
+Nota: Debe instalar primero rest_auth y hacer las migraciones para que cree la tabla
+
+from rest_framework.authtoken.models import Token
+user=User.objects.get(id='1144049795')
+token = Token.objects.create(user=user)
+
+ fc38c8f651af1392b04b5c7d5af652ac664217ff
+
+# AUTHETICATE AN USER
+
+from django.contrib.auth import authenticate
+user = authenticate(username='macripco', password='macripco')
+if user is not None:
+    # A backend authenticated the credentials
+else:
+    # No backend authenticated the credentials
+
+# VERIFY IF A USER IS AUTHENTICATED
+
+if request.user.is_authenticated:
+    # Do something for authenticated users.
+    ...
+else:
+    # Do something for anonymous users.
+    ...
+
+#LOG A USER IN
+
+from django.contrib.auth import authenticate, login
+
+def my_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        # Redirect to a success page.
+        ...
+    else:
+        # Return an 'invalid login' error message.
+        ...
+
+# LOGOUT A USER
+
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    # Redirect to a success page.
+
+|----------------------------------->
+    PERMISSION
+|----------------------------------->
+#CREATE PERMISSION FOR ADMIN, PROFESSOR AND DIRECTOR
+
+
+from django.contrib.contenttypes.models import ContentType
+
+ct = ContentType.objects.get(app_label="auth", model="user")
+permission = Permission.objects.create(codename='professor', name='professor', content_type=ct)
+permission = Permission.objects.create(codename='director', name='director', content_type=ct)
+permission = Permission.objects.create(codename='administrator', name='administrator', content_type=ct)
+
+#GIVE PERMISSION TO USER
+
+per = Permission.objects.get(name='professor')
+user.user_permissions.add(per)
+
+#VERIFY IF USER HAS A PERMISSION
+user.has_perm('auth.professor')
+
+
+|----------------------------------->
+
+
+
+
+
+
+
+"""
+from login.models import Track, Album
+from login.api.serializers import AlbumSerializer, TrackSerializer
+album = Album(album_name='fuck',artist='Avril')
+song =Track(album=album,order=5,title='Take me away',duration=5)
+ser=AlbumSerializer(instance=album)
+tra=TrackSerializer(instance=song)
+ser.data
+{'album_name': 'fuck', 'artist': 'Avril', 'tracks': []}
+>>> bum = Album(album_name='fuck',artist='Avril')
+>>> song =Track(album=bum,order=5,title='Take me away',duration=5)
+>>> ser=AlbumSerializer(instance=bum)
+>>> ser.data
+
+
+"""

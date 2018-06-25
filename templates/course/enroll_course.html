@@ -1,0 +1,75 @@
+{% extends "course/base.html"%}
+
+			{% block collection%}
+    		<div class="row">
+    			<ul class="collection">			    
+				    <li class="collection-item avatar">
+					    <i class="material-icons circle red darken-3"><span class="icon-book"></span></i>
+					    <span class="title red-text text-darken-3" style="font-weight: 500;">{{ course.name_course }}</span>
+					    <p>
+					        Group:  {{ course.group_course }}<br>
+					        Professor:  {{ course.professor_course }} <br>
+					        Credits:  {{ course.credits_course }}
+					    </p>				      
+				    </li>			    
+			 	</ul>    			
+    		</div>
+    		{% endblock%}
+
+    		
+    		{% block title%}
+    		<div class="row">
+    			<h5 style="color:#424242;">Register</h5>
+    		</div>
+    		{% endblock%}
+
+			
+
+    		{% block content%}
+			<form id="registration_student_form"  method ='POST' action=".">
+        		{% csrf_token %}
+				<div class="row">
+					<div class="input-field">
+			            {{ registration_form.code_student }}
+		    	        <label for="{{ registration_form.code_student.id_for_label }}">Code</label>
+		  			</div>					
+				</div>
+
+	  			<div class="row">
+	  				<div class="input-field">
+			            {{ registration_form.name_student }}
+		    	        <label for="{{ registration_form.name_student.id_for_label }}">Name</label>
+	  				</div>	  				
+	  			</div>	  			
+	  			
+	  			<div class="row">
+	  				<div class="input-field">
+			            {{ registration_form.lastname_student }}
+		    	        <label for="{{ registration_form.lastname_student.id_for_label }}">Lastname</label>
+		  			</div>	  				
+	  			</div>	  			
+	  			
+	  			<div class="row">
+	  				<div class="input-field">
+			            {{ registration_form.email_student }}
+		    	        <label for="{{ registration_form.email_student.id_for_label }}">E-mail</label>
+		  			</div>	  				
+	  			</div>
+
+	  			<div class="row">
+	  				<div class="center">
+					    <button id="btn-select-pa" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('registration_student_form').submit(); return false;">Submit
+						    <i class="material-icons right">send</i>
+						</button>
+					</div>	  				
+	  			</div>	  				        		
+			</form>
+			{% endblock %}   		
+    	
+
+
+
+
+
+
+

@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>UV Domjudge</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/materialize.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'icon/style.css' %}">
+    </head>
+    <body>       
+
+        <nav id="nav-bar">
+            <div class="nav-wrapper">
+                <div class="container">
+                    <div class="row">
+                        <a href="#" class="brand-logo"><!--i class="material-icons">cloud</i-->UV-DOMjudge</a>
+                        {% block navbar %}
+                        {% endblock %}                        
+                    </div>
+                </div>
+              
+            </div>
+        </nav> 
+         
+
+
+    	<div class="container">
+    		<div class="row"></div>
+    		<div class="row"></div>
+    		<div class="row"></div>
+
+
+    		<div class="row">
+            {% block collection %}
+            {% endblock %}                
+            </div>
+    		
+
+    		<div class="row"></div>
+
+    		
+
+            <div class="row">
+            {% block title %}               
+            {% endblock %}
+            </div>
+
+
+            <!--Display messages-->
+			{% if messages %}
+			<div class="row">
+				<ul class="messages">
+					{% for message in messages %}
+					<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+	                    {% if message.level == 25 %}
+	                    <div class="card-panel green lighten-4">
+	                        <span>{{ message }}</span>
+	                    </div>
+	                    {% endif %}
+	                    {% if message.level == 40 %}
+	                    <div class="card-panel red lighten-4">
+	                        <span>{{ message }}</span>
+	                    </div>
+	                    {% endif %}
+	                </li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			<!--Display messages-->
+
+            <div class="row">
+                <ul class="collapsible popout" data-collapsible="accordion">
+                {% block options %}
+                {% endblock %}  
+                </ul>
+            </div>
+
+
+    		<div class="row"></div>
+
+
+    		{% block content%}
+    		{% endblock %}
+    		
+			   		
+    	</div>       
+
+        <script src="{% static 'js/jquery.js' %}"></script>
+        <script src="{% static 'js/materialize.js' %}"></script>
+        <script src="{% static 'js/script.js' %}"></script>
+    </body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,227 @@
+{% extends "profile/base.html"%}
+
+
+            
+
+            {% block navbar %}
+            <ul class="right hide-on-med-and-down">                 
+                <li><a href="/uvdomjudge/logout/"><span class="icon-exit"></span></a></li>
+            </ul>
+            {% endblock %} 
+
+
+            {% block collection %}          
+                <ul class="collection">             
+                    <li class="collection-item avatar">
+                        <i class="material-icons circle red darken-3"><span class="icon-user-tie"></span></i>
+                        <span class="title red-text text-darken-3" style="font-weight: 500;"><span id={{user.first_name}}>{{ user.first_name }}</span> <span id={{user.last_name}}>{{ user.last_name }}</span></span>
+                        <p>
+                            Identification:  <span id="{{ user.id }}">{{ user.id }}</span><br>
+                            Username:        <span id={{user.username}}>{{ user.username }}</span><br>
+                            E-mail:          <span id={{user.email}}>{{ user.email }}</span><br>                           
+                        </p>                      
+                    </li>               
+                </ul>           
+            {% endblock %}
+
+
+    		{% block title%}    		
+    			<h5 style="color:#424242;">Professor's Profile</h5>
+    		{% endblock%}
+
+            {% block options %}
+            <!--li>
+                <div class="collapsible-header"><i class="material-icons">settings</i>Settings</div>
+                <div class="collapsible-body">
+                    <form id="config_profile_form" method ='POST' action=".">
+                        {% csrf_token %}
+                        {{ config_profile_form.as_p }}
+                        <div class="row">
+                    <div class="center">
+
+                        <button id="btn_settings_submit" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('config_profile_form').submit(); return false;">Create
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </div>
+
+                    </form>
+                </div>
+            </li-->
+            <li>
+                <div class="collapsible-header"><i class="material-icons">remove_red_eye</i>Courses in charge</div>
+                <div class="collapsible-body">
+
+
+                <table class="bordered responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Group</th>
+                            <th>Url</th>
+                            <th>
+                                <div class="center-align">
+                                    Download
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses_professor %}
+
+                        <tr>
+                            <td>{{ course.code_course }}</td>
+                            <td>{{ course.name_course }}</td>
+                            <td>{{ course.group_course }}</td>
+                            <td>
+                                <a href="{{ course.url }}" target="_blank">{{ course.url }}</a>
+                            </td>
+                            <td>
+                                <div class="center-align">
+                                    <a href="download_db/{{ course.id_course }}/"><i class="material-icons">file_download</i></a>
+                                </div>
+
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+
+
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">add_circle_outline</i>Create a course</div>
+                <div class="collapsible-body">
+                    <form id="create_course_form" method ='POST' action=".">
+                {% csrf_token %}
+
+                <!--Code of Course-->
+                <div class="row">
+                    <div class="input-field">
+                        {{ create_course_form.code_course}}
+                        <label for="{{ create_course_form.code_course.id_for_label }}">Code</label>
+                    </div>
+                </div>
+                <!--Code of Course-->
+                
+                <!--Name of Course-->
+                <div class="row">
+                    <div class="input-field">
+                        {{ create_course_form.name_course}}                        
+                        <label for="{{ create_course_form.name_course.id_for_label }}">Name</label>
+                    </div>                  
+                </div>              
+                <!--Name of Course-->
+
+                <!--Credits of Course-->
+                <div class="row">
+                    <div class="input-field">
+                        {{ create_course_form.credits_course}}                   
+                      <label for="{{ create_course_form.credits_course.id_for_label }}">Credits</label>
+                    </div>                  
+                </div>              
+                <!--Credits of Course-->
+
+                <!--Professor of Course-->
+                <div class="row">
+                    <div class="input-field">                        
+                        <input type="text" name="{{ create_course_form.professor_course.name }}" readonly value="{{ user.id }}">
+                        <label for="{{ create_course_form.professor_course.id_for_label }}">Professor</label>
+                    </div>                  
+                </div>              
+                <!--Professor of Course-->
+
+                <!--Group of Course-->
+                <div class="row">
+                    <div class="input-field">
+                      {{ create_course_form.group_course}}
+                      <label for="{{ create_course_form.group_course.id_for_label }}" data-error="Invalid value." data-success="Valid.">Group</label>
+                    </div>
+                    <div>
+                        <p id="error_group_course"></p>                         
+                    </div>                  
+                </div>
+                <!--Group of Course-->
+
+                <!--Period of Course-->
+                <div class="row">
+                    <div class="input-field">
+                        {{ create_course_form.period_course}}
+                        <label for="{{ create_course_form.period_course.id_for_label }}">Period</label>
+                    </div>                  
+                </div>              
+                <!--Period of Course-->
+
+                <!--Year of Course-->
+                <div class="row">
+                    <div class="input-field">
+                        {{ create_course_form.year_course}}
+                        <label for="{{ create_course_form.year_course.id_for_label }}">Year</label>
+                    </div>
+                </div>
+                <!--Year of Course-->
+
+                <!--Programming Language of Course-->
+                <div class="row">
+                    <div class="input-field">
+                        {{ create_course_form.programming_language}}
+                        <label for="{{ create_course_form.programming_language.id_for_label }}">Programming Language</label>
+                    </div>                  
+                </div>              
+                <!--Programming Language of Course-->
+
+                <!--Button Create-->
+                <div class="row">
+                    <div class="center">
+
+                        <button id="btn_create_course_submit" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('create_course_form').submit(); return false;">Create
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>                  
+                </div>                          
+                <!--Button Create-->            
+            </form>
+
+
+
+                </div>
+            </li>            
+            {% endblock %}
+
+
+
+            
+
+    		{% block content%}
+
+			<!--display forms errors-->
+			{% if log_in_form.errors %}
+				{% for field in log_in_form %}
+					{% for error in field.errors %}
+						<div class="card-panel red lighten-4">
+	                        <span>{{ error|escape }}</span>
+	                    </div>
+					{% endfor %}
+				{% endfor %}
+				{% for error in log_in_form.non_field_errors %}
+						<div class="card-panel red lighten-4">
+	                        <span>{{ error|escape }}</span>
+	                    </div>
+				{% endfor %}
+			{% endif %}
+			<!--display forms errors-->            
+                
+            
+                               
+            
+                                
+            
+
+    		    		
+    		{% endblock %}   
