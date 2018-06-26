@@ -188,7 +188,7 @@ def logout_view(request):
 |----------------------------------->
 #CREATE PERMISSION FOR ADMIN, PROFESSOR AND DIRECTOR
 
-
+from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 
 ct = ContentType.objects.get(app_label="auth", model="user")
@@ -203,6 +203,8 @@ user.user_permissions.add(per)
 
 #VERIFY IF USER HAS A PERMISSION
 user.has_perm('auth.professor')
+user.has_perm('auth.administrator')
+
 
 
 |----------------------------------->
