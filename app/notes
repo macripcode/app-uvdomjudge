@@ -139,7 +139,8 @@ from rest_framework.authtoken.models import Token
 user=User.objects.get(id='1144049795')
 token = Token.objects.create(user=user)
 
- fc38c8f651af1392b04b5c7d5af652ac664217ff
+#fc38c8f651af1392b04b5c7d5af652ac664217ff
+#token en api
 
 # AUTHETICATE AN USER
 
@@ -231,3 +232,9 @@ ser.data
 
 
 """
+johnsa
+5670816db1eb0943d9d05d71550a064e85ca272c
+
+macripco
+4be31da622b8e047e6a7eb6d5fb896250ad161fc
+

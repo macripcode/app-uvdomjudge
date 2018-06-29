@@ -1,16 +1,18 @@
 import json
 import os
+from django.contrib.auth.models import Permission
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
+from rest_framework.authtoken.models import Token
 from .forms import CreateUserForm
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-from django.contrib.auth.models import Permission
 from request.clients import get_periods
 from request.clients import delete_period_courses
 from request.clients import delete_period_containers
 from request.clients import delete_period
-from django.http import JsonResponse
+from request.clients import create_user
+
 
 
 def administrator_profile(request):
@@ -64,6 +66,25 @@ def administrator_profile(request):
                 permission_professor = Permission.objects.get(name='professor')
                 user.user_permissions.add(permission_professor)
                 user.save()
+
+            # ------Creating token--->
+            user = User.objects.get(id=id)
+            token = Token.objects.create(user=user)
+
+            #------Creating info to send api
+            data_user = {
+                "id": id,
+                "username": username,
+                "password": password,
+                "first_name": first_name,
+                "last_name": last_name,
+                "email": email,
+                "token": token.key
+            }
+
+            print(data_user)
+            response = create_user(data_user)
+            print(response)
 
             if user.has_perm('auth.administrator') or user.has_perm('auth.professor'):
                 return redirect("/uvdomjugde/administrator/created_user")

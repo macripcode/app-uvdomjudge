@@ -14,7 +14,9 @@ import json
 
 
 def public_page(request):
+
     current_courses = json.loads((get_courses()).decode('utf-8'))
+
 
     """
      # ------- assigning url to each course ------------>
@@ -30,6 +32,7 @@ def public_page(request):
     
     """
     for course in current_courses:
+
         course['professor_name']=get_professor(course['professor_course'])
         id_course = course['id_course']
         container_enc = get_container(id_course)

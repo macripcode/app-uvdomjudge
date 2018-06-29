@@ -42,6 +42,7 @@ def professor_profile(request):
         id_course=course['id_course']
         container_enc=get_container(id_course)
         container_str=container_enc.decode('utf-8')
+        print(container_str)
         container=json.loads(container_str)
         port_80_container=container['port_number_80_container']
         url='http://localhost:'+port_80_container+'/domjudge/public/login.php'

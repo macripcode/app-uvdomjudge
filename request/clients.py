@@ -16,6 +16,9 @@ from .client_periods_administrator import PeriodsAdministratorClient
 from .client_delete_courses_period_administrator import DeletePeriodCoursesAdministratorClient
 from .client_delete_containers_period_administrator import DeletePeriodContainersAdministratorClient
 from .client_delete_period_administrator import DeletePeriodAdministratorClient
+from .client_create_user_administrator import CreateUserAdministratorClient
+
+
 
 
 
@@ -66,6 +69,11 @@ def create_course(course):
 def create_period(period):
     request=PeriodCreateProfessorClient()
     response = request.call(period)
+    return response
+
+def create_user(user):
+    request = CreateUserAdministratorClient()
+    response = request.call(user)
     return response
 
 
