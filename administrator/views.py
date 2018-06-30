@@ -82,8 +82,16 @@ def administrator_profile(request):
                 "token": token.key
             }
 
+            data_str = json.dumps(data_user)
+            print("data str")
+            print(data_str)
+            data_enc = data_str.encode('utf-8')
+            print("data enc")
+            print(data_enc)
+
+
             print(data_user)
-            response = create_user(data_user)
+            response = create_user(data_enc)
             print(response)
 
             if user.has_perm('auth.administrator') or user.has_perm('auth.professor'):
@@ -163,7 +171,7 @@ def page_created_user(request):
     return render(request, "profile/created_user.html")
 
 def page_fail_user(request):
-    return render(request, "profile/fail_user.html")
+    return render(request, "profile/fail_created_user.html")
 
 
 def created_backups_success(request):
