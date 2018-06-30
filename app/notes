@@ -238,3 +238,18 @@ johnsa
 macripco
 4be31da622b8e047e6a7eb6d5fb896250ad161fc
 
+
+"""
+     # ------- assigning url to each course ------------>
+
+    for course in courses_professor:
+        id_course=course['id_course']
+        container_enc=get_container(id_course)
+        container_str=container_enc.decode('utf-8')
+        container=json.loads(container_str)
+        port_80_container=container['port_number_80_container']
+        url='http://localhost:'+port_80_container+'/domjudge/public/login.php'
+        course['url']=url
+
+    """
+
