@@ -24,6 +24,7 @@ class CreateCourseProfessor(object):
             self.response = body
 
     def call(self, course):
+        print(course)
         self.response = None
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(exchange='',

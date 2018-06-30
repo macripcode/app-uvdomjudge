@@ -71,7 +71,9 @@ def create_period(period):
     response = request.call(period)
     return response
 
+
 def create_user(user):
+    print("llego 1")
     request = CreateUserAdministratorClient()
     response = request.call(user)
     return response
