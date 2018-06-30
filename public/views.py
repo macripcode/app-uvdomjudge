@@ -18,19 +18,6 @@ def public_page(request):
     current_courses = json.loads((get_courses()).decode('utf-8'))
 
 
-    """
-     # ------- assigning url to each course ------------>
-
-    for course in courses_professor:
-        id_course=course['id_course']
-        container_enc=get_container(id_course)
-        container_str=container_enc.decode('utf-8')
-        container=json.loads(container_str)
-        port_80_container=container['port_number_80_container']
-        url='http://localhost:'+port_80_container+'/domjudge/public/login.php'
-        course['url']=url
-    
-    """
     for course in current_courses:
 
         course['professor_name']=get_professor(course['professor_course'])
