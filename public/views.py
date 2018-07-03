@@ -1,13 +1,13 @@
+import json
+from django.contrib import messages
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from .forms import RegistrationForm
-from request.clients import get_courses
+from request.clients import client_public_get_courses
 from request.clients import get_course_detail
-from request.clients import get_container
+from request.clients import client_public_get_container
 from request.clients import enroll_student
-from django.contrib import messages
-
-from django.contrib.auth.models import User
-import json
+from request.clients import get_user_detail
 
 
 # Create your views here.
@@ -15,21 +15,28 @@ import json
 
 def public_page(request):
 
-    current_courses = json.loads((get_courses()).decode('utf-8'))
+    current_courses = json.loads((client_public_get_courses()).decode('utf-8'))
+
+    if len(current_courses) == 0:
+        messages.error(request, "There are no courses currently")
+
+    if len(current_courses) > 0 :
+        print(len(current_courses))
 
 
-    for course in current_courses:
+        for course in current_courses:
 
-        course['professor_name']=get_professor(course['professor_course'])
-        id_course = course['id_course']
-        container_enc = get_container(id_course)
-        container_str = container_enc.decode('utf-8')
-        container = json.loads(container_str)
-        port_80_container = container['port_number_80_container']
-        url = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
-        course['url'] = url
+            course['professor_name']=get_professor(course['professor_course'])
+            id_course = course['id_course']
+            container_enc = client_public_get_container(id_course)
+            container_str = container_enc.decode('utf-8')
+            container = json.loads(container_str)
+            port_80_container = container['port_number_80_container']
+            url = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
+            course['url'] = url
 
-    print(current_courses)
+        print(current_courses)
+
     context={
         "current_courses": current_courses,
     }
@@ -50,7 +57,7 @@ def enroll_course(request, id_course):
 
     # ------- getting container with id_course ------------>
 
-    container_bites=get_container(id_course)
+    container_bites=client_public_get_container(id_course)
     container_str=container_bites.decode('utf-8')
     container=json.loads(container_str)
 

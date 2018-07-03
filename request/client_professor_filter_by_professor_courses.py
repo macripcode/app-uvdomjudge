@@ -1,9 +1,10 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import pika
 import uuid
 
 
-class PeriodCreateProfessorClient(object):
+class ClientProfessorFilterByProfessorCourse(object):
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 
@@ -19,16 +20,16 @@ class PeriodCreateProfessorClient(object):
         if self.corr_id == props.correlation_id:
             self.response = body
 
-    def call(self, period):
+    def call(self, id_professor):
         self.response = None
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(exchange='',
-                                   routing_key='queue_create_period',
+                                   routing_key='queue_filter_by_professor_course',
                                    properties=pika.BasicProperties(
                                          reply_to = self.callback_queue,
                                          correlation_id = self.corr_id,
                                          ),
-                                   body=period)
+                                   body=str(id_professor).encode('utf-8'))
         while self.response is None:
             self.connection.process_data_events()
         return self.response

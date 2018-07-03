@@ -1,54 +1,47 @@
+import os
+import json
+from django.contrib import messages
 from django.shortcuts import render
+from django.shortcuts import redirect
+from django.views.static import serve
 from .forms import CreateCourseForm
 from .forms import ConfigProfileForm
 from request.serializers import CourseSerializer
-from request.clients import create_course
-from request.clients import get_image_detail
-from request.clients import run_container
-from request.clients import check_period
-from request.clients import create_period
+from request.clients import client_professor_create_course
+from request.clients import client_professor_get_image
+from request.clients import client_professor_run_container
+from request.clients import client_professor_exist_period
+from request.clients import client_professor_create_period
 from request.clients import get_data_container
 from request.clients import create_container
-from request.clients import check_course
-from request.clients import get_courses_by_professor
-from request.clients import get_container
+from request.clients import client_professor_exist_course
+from request.clients import client_professor_filter_by_professor_course
+from request.clients import client_public_get_container
 from request.clients import set_pass_professor
 
 
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.shortcuts import redirect
-from django.views.static import serve
-
-import os
-import json
-
-
 def professor_profile(request):
-
     # ------- get courses by professor ------------>
     user = request.user
     id_professor = str(user.id)
+    #---send token too and validate
     print(id_professor)
-    courses_professor_enc =get_courses_by_professor(id_professor)
+    courses_professor_enc = client_professor_filter_by_professor_course(id_professor)
 
     courses_professor_str = (courses_professor_enc.decode('utf-8')).replace('Ã³','ó')
-    courses_professor=json.loads(courses_professor_str)
+    courses_professor = json.loads(courses_professor_str)
 
     # ------- assigning url to each course ------------>
 
     for course in courses_professor:
         id_course=course['id_course']
-        container_enc=get_container(id_course)
+        container_enc=client_public_get_container(id_course)
         container_str=container_enc.decode('utf-8')
         print(container_str)
         container=json.loads(container_str)
         port_80_container=container['port_number_80_container']
         url='http://localhost:'+port_80_container+'/domjudge/public/login.php'
         course['url']=url
-
-
 
     create_course_form = CreateCourseForm()
     create_course_form.fields['group_course'].widget.attrs = {
@@ -101,16 +94,13 @@ def professor_profile(request):
             }
 
             #Checking if course is not exist
-            response_1=(check_course(id_course)).decode('utf-8')
+            response_1=(client_professor_exist_course(id_course)).decode('utf-8')
 
             if response_1 == '404':
-
                 serializer = CourseSerializer(data=data)
-
                 if serializer.is_valid():
                     # checking if academic period is not exist
-                    response_2 = (check_period(data['academic_period'])).decode('utf-8')
-
+                    response_2 = (client_professor_exist_period(data['academic_period'])).decode('utf-8')
                     if response_2 == '404':
                         name_academic_period = ""
                         if data['period_course'] == '01':
@@ -124,10 +114,8 @@ def professor_profile(request):
                         }
                         data_period_str = json.dumps(data_period)
                         data_period_enc = data_period_str.encode('utf-8')
-
-
                         # -------creating period -------->
-                        create_period(data_period_enc)
+                        client_professor_create_period(data_period_enc)
 
                     # -------creating course -------->
 
@@ -138,7 +126,7 @@ def professor_profile(request):
                     print("data enc")
                     print(data_enc )
 
-                    response_3 = create_course(data_enc)
+                    response_3 = client_professor_create_course(data_enc)
                     print("respuesta de crear curso")
                     print(response_3.decode('utf-8'))
 
@@ -147,7 +135,7 @@ def professor_profile(request):
 
                         # -------running container -------->
                         id_image = programming_language.encode('utf-8')
-                        image_data = json.loads((get_image_detail(id_image)).decode('utf-8'))
+                        image_data = json.loads((client_professor_get_image(id_image)).decode('utf-8'))
 
                         image = image_data['name_image']
                         name_vol_container = id_course + "_backup_db"
@@ -161,7 +149,7 @@ def professor_profile(request):
                         data_container_str = json.dumps(data_container)
                         data_container_enc = data_container_str.encode('utf-8')
 
-                        response_4 = run_container(data_container_enc)
+                        response_4 = client_professor_run_container(data_container_enc)
 
                         print("response 4")
                         print(type(response_4))

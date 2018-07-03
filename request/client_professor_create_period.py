@@ -3,7 +3,7 @@ import pika
 import uuid
 
 
-class ContainerPublicClient(object):
+class ClientProfessorCreatePeriod(object):
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 
@@ -19,16 +19,16 @@ class ContainerPublicClient(object):
         if self.corr_id == props.correlation_id:
             self.response = body
 
-    def call(self, name_container):
+    def call(self, period):
         self.response = None
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(exchange='',
-                                   routing_key='queue_get_container',
+                                   routing_key='queue_create_period',
                                    properties=pika.BasicProperties(
                                          reply_to = self.callback_queue,
                                          correlation_id = self.corr_id,
                                          ),
-                                   body=str(name_container).encode('utf-8'))
+                                   body=period)
         while self.response is None:
             self.connection.process_data_events()
         return self.response

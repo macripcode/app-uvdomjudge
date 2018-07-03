@@ -159,18 +159,11 @@ def create_backups(request):
     print(response)
     return JsonResponse(response)
 
-
-
-
-
-
-
-
-
-def page_created_user(request):
+def created_user(request):
+    print("entro a created user")
     return render(request, "profile/created_user.html")
 
-def page_fail_user(request):
+def fail_user(request):
     return render(request, "profile/fail_created_user.html")
 
 

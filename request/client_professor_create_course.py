@@ -7,7 +7,7 @@ import uuid
 
 
 
-class CreateCourseProfessor(object):
+class ClientProfessorCreateCourse(object):
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 

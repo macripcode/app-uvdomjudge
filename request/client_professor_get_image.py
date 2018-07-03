@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 import pika
 import uuid
-import json
 
 
-class RunContainerProfessor(object):
+class ClientProfessorGetImage(object):
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 
@@ -20,16 +19,21 @@ class RunContainerProfessor(object):
         if self.corr_id == props.correlation_id:
             self.response = body
 
-    def call(self, container):
+    def call(self, id_image):
         self.response = None
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(exchange='',
-                                   routing_key='queue_run_container',
+                                   routing_key='queue_get_image',
                                    properties=pika.BasicProperties(
                                          reply_to = self.callback_queue,
                                          correlation_id = self.corr_id,
                                          ),
-                                   body=container)
+                                   body=id_image)
         while self.response is None:
             self.connection.process_data_events()
         return self.response
+
+
+
+
+
