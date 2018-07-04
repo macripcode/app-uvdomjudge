@@ -18,6 +18,10 @@ from .client_delete_containers_period_administrator import DeletePeriodContainer
 from .client_delete_period_administrator import DeletePeriodAdministratorClient
 from .client_create_user_administrator import CreateUserAdministratorClient
 from .client_public_user_detail import ClientPublicUserDetail
+from .client_public_exists_container import ClientPublicExistContainer
+from .client_public_run_container import ClientPublicRunContainer
+
+
 
 # Check if the course already exist
 def client_professor_exist_course(id_course):
@@ -32,8 +36,21 @@ def client_professor_exist_period(id_period):
     return response
 #--------professor client-------->
 
+def client_public_exist_container(name_container):
+    #check if container exist in the api's db
+    request = ClientPublicExistContainer()
+    response = request.call(name_container)
+    return response
+
+def client_public_run_container(name_container):
+    #check if container with name_container is running currently
+    request = ClientPublicRunContainer()
+    response = request.call(name_container)
+    return response
+
 
 def client_public_get_container(name_container):
+    #get the info of container from api's db
     request = ClientPublicGetContainer()
     response = request.call(name_container)
     return response

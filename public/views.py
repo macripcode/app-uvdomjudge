@@ -7,39 +7,50 @@ from request.clients import client_public_get_courses
 from request.clients import get_course_detail
 from request.clients import client_public_get_container
 from request.clients import enroll_student
+from request.clients import client_public_exist_container
+from request.clients import client_public_run_container
 from request.clients import get_user_detail
-
-
-# Create your views here.
 
 
 def public_page(request):
 
-    current_courses = json.loads((client_public_get_courses()).decode('utf-8'))
+    courses_in_api = json.loads((client_public_get_courses()).decode('utf-8'))
+    current_courses = []
 
-    if len(current_courses) == 0:
+    if len(courses_in_api) == 0:
         messages.error(request, "There are no courses currently")
 
-    if len(current_courses) > 0 :
-        print(len(current_courses))
+    if len(courses_in_api) > 0 :
+
+        for i in range(0, len(courses_in_api)):
+
+            course = courses_in_api[i]
+
+            #----checking if container associated a course exist api----->
+            # ----checking if container associated a course is running----->
+
+            response_1_enc= client_public_exist_container(course['id_course'])
+            response_1 = response_1_enc.decode('utf-8')
+
+            if response_1 == '200':
+                course['professor_name'] = get_professor(course['professor_course'])
+                id_course = course['id_course']
+                container_enc = client_public_get_container(id_course)
+                container_str = container_enc.decode('utf-8')
+                container = json.loads(container_str)
+                port_80_container = container['port_number_80_container']
+                url = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
+                course['url'] = url
+                current_courses.append(course)
+
+            context={
+                "current_courses": current_courses,
+            }
+
+        if len(current_courses) == 0 :
+            messages.error(request, "There are no courses currently")
 
 
-        for course in current_courses:
-
-            course['professor_name']=get_professor(course['professor_course'])
-            id_course = course['id_course']
-            container_enc = client_public_get_container(id_course)
-            container_str = container_enc.decode('utf-8')
-            container = json.loads(container_str)
-            port_80_container = container['port_number_80_container']
-            url = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
-            course['url'] = url
-
-        print(current_courses)
-
-    context={
-        "current_courses": current_courses,
-    }
     return render(request, "public/get_courses.html", context)
 
 
