@@ -25,32 +25,28 @@ def public_page(request):
         for i in range(0, len(courses_in_api)):
 
             course = courses_in_api[i]
-
-            #----checking if container associated a course exist api----->
-            # ----checking if container associated a course is running----->
-
             response_1_enc= client_public_exist_container(course['id_course'])
             response_1 = response_1_enc.decode('utf-8')
-
             if response_1 == '200':
-                course['professor_name'] = get_professor(course['professor_course'])
-                id_course = course['id_course']
-                container_enc = client_public_get_container(id_course)
-                container_str = container_enc.decode('utf-8')
-                container = json.loads(container_str)
-                port_80_container = container['port_number_80_container']
-                url = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
-                course['url'] = url
-                current_courses.append(course)
+                response_2_enc = client_public_run_container(course['id_course'])
+                response_2 = response_2_enc.decode('utf-8')
+                if response_2 == 'true':
+                    course['professor_name'] = get_professor(course['professor_course'])
+                    id_course = course['id_course']
+                    container_enc = client_public_get_container(id_course)
+                    container_str = container_enc.decode('utf-8')
+                    container = json.loads(container_str)
+                    port_80_container = container['port_number_80_container']
+                    url = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
+                    course['url'] = url
+                    current_courses.append(course)
 
-            context={
-                "current_courses": current_courses,
-            }
+        if len(current_courses) == 0:
+            messages.error(request, "There's no courses currently.")
 
-        if len(current_courses) == 0 :
-            messages.error(request, "There are no courses currently")
-
-
+        context={
+            "current_courses": current_courses,
+        }
     return render(request, "public/get_courses.html", context)
 
 
