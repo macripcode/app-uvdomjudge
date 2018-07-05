@@ -38,22 +38,34 @@ def professor_profile(request):
         messages.error(request, "There are no courses currently")
 
     if len(courses_professor_in_api) > 0 :
-
         for i in range(0, len(courses_professor_in_api)):
             course = courses_professor_in_api[i]
             response_1_enc = client_public_exist_container(course['id_course'])
             response_1 = response_1_enc.decode('utf-8')
+            print("response_1")
+            print(response_1)
             if response_1 == '200':
-                id_course = course['id_course']
-                container_enc=client_public_get_container(id_course)
-                print("pidio el contenedor")
-                container_str=container_enc.decode('utf-8')
-                print(container_str)
-                container=json.loads(container_str)
-                port_80_container=container['port_number_80_container']
-                url='http://localhost:'+port_80_container+'/domjudge/public/login.php'
-                course['url']=url
-                courses_professor.append(course)
+                response_2_enc = client_public_run_container(course['id_course'])
+                response_2 = response_2_enc.decode('utf-8')
+                print("response_2")
+                print(response_2)
+                if response_2 == 'true':
+                    id_course = course['id_course']
+                    container_enc=client_public_get_container(id_course)
+                    print("pidio el contenedor")
+                    container_str=container_enc.decode('utf-8')
+                    print(container_str)
+                    container=json.loads(container_str)
+                    port_80_container=container['port_number_80_container']
+                    url='http://localhost:'+port_80_container+'/domjudge/public/login.php'
+                    course['url']=url
+                    courses_professor.append(course)
+                    print("courses_professor")
+                    print(courses_professor)
+
+        if len(courses_professor) == 0:
+            messages.error(request, "There's no courses currently.")
+
 
     create_course_form = CreateCourseForm()
     create_course_form.fields['group_course'].widget.attrs = {
@@ -144,7 +156,7 @@ def professor_profile(request):
 
 
                     if response_3.decode('utf-8') == '201':
-                        # -------running container -------->
+                        # -------creating container -------->
                         id_image = programming_language.encode('utf-8')
                         image_data = json.loads((client_professor_get_image(id_image)).decode('utf-8'))
 
@@ -168,63 +180,63 @@ def professor_profile(request):
                             response_5_enc = client_public_run_container(id_course)
                             response_5 = response_5_enc.decode('utf-8')
                             print("container is running?")
+                            print(type(response_5))
                             print(response_5)
 
                             if response_5 == 'true':
                                 # ------ the container is up------->
-                                #tarea colocar la misma funcion en el view de public
                                 print("contenedor corriendo")
-                                # print("id curso")
-                                # print(id_course)
-                                # #-------check if container is running------->
-                                # data_container = get_data_container(id_course)
-                                # print("datos contenedor")
-                                # print(type(data_container))
-                                # print(data_container)
-                                # response_6 = create_container(data_container)
-                                # print("container registrado")
-                                # print(type(response_6))
-                                # print(response_6)
+                                print("id curso")
+                                print(id_course)
+                                #-------check if container is running------->
+                                data_container = get_data_container(id_course)
+                                print("datos contenedor")
+                                print(type(data_container))
+                                print(data_container)
+                                response_6 = create_container(data_container)
+                                print("container registrado")
+                                print(type(response_6))
+                                print(response_6)
 
-                                # if response_6.decode('utf-8') == '201':
-                                #
-                                #     # modificar contrasena de admin
-                                #     print("id del curso")
-                                #     print(id_course)
-                                #     print("id profesor")
-                                #     print(id_professor)
-                                #
-                                #
-                                #     data_set_pass = {
-                                #         "id_professor" : id_professor,
-                                #         "name_professor": str(user.first_name),
-                                #         "lastname_professor": str(user.last_name),
-                                #         "email_professor" : str(user.email),
-                                #         "id_course" : id_course,
-                                #     }
-                                #     print("datos profe")
-                                #     print(data_set_pass)
-                                #
-                                #     data_set_pass_str = json.dumps(data_set_pass)
-                                #     print("data_set_pass_str")
-                                #     print(data_set_pass_str)
-                                #     print(type(data_set_pass_str))
-                                #
-                                #     data_set_pass_enc = data_set_pass_str.encode('utf-8')
-                                #     print("data_set_pass_enc")
-                                #     print(data_set_pass_enc)
-                                #     print(type(data_set_pass_enc))
-                                #
-                                #     response_7 = set_pass_professor(data_set_pass_enc)
-                                #     print("response_7")
-                                #     print("el lazo 1")
-                                #     print(response_7)
-                                #
-                                #     if response_7.decode('utf-8') == '201':
-                                #
-                                #         return redirect("created_course/")
-                                #     else:
-                                #         return redirect("fail_course/")
+                                if response_6.decode('utf-8') == '201':
+
+                                    # modificar contrasena de admin
+                                    print("id del curso")
+                                    print(id_course)
+                                    print("id profesor")
+                                    print(id_professor)
+
+
+                                    data_set_pass = {
+                                        "id_professor" : id_professor,
+                                        "name_professor": str(user.first_name),
+                                        "lastname_professor": str(user.last_name),
+                                        "email_professor" : str(user.email),
+                                        "id_course" : id_course,
+                                    }
+                                    print("datos profe")
+                                    print(data_set_pass)
+
+                                    data_set_pass_str = json.dumps(data_set_pass)
+                                    print("data_set_pass_str")
+                                    print(data_set_pass_str)
+                                    print(type(data_set_pass_str))
+
+                                    data_set_pass_enc = data_set_pass_str.encode('utf-8')
+                                    print("data_set_pass_enc")
+                                    print(data_set_pass_enc)
+                                    print(type(data_set_pass_enc))
+
+                                    response_7 = set_pass_professor(data_set_pass_enc)
+                                    print("response_7")
+                                    print("el lazo 1")
+                                    print(response_7)
+
+                                    if response_7.decode('utf-8') == '201':
+
+                                        return redirect("created_course/")
+                                    else:
+                                        return redirect("fail_course/")
 
                             else:
                                 messages.error(request, "The container associated to the course is not in execution.")
