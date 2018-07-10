@@ -20,6 +20,7 @@ from request.clients import client_public_get_container
 from request.clients import client_public_exist_container
 from request.clients import client_public_run_container
 from request.clients import set_pass_professor
+from request.clients import client_professor_get_port_80_container
 
 
 def professor_profile(request):
@@ -56,6 +57,11 @@ def professor_profile(request):
                     container_str=container_enc.decode('utf-8')
                     print(container_str)
                     container=json.loads(container_str)
+                    #--------hacer funcion para pedir el puerto 80 ---->
+                    #client_professor_get_port_80_container(name_container)
+                    # --------hacer funcion para pedir el puerto 3306 ---->
+                    #----------recuerde para cuando vaya a guardar el contenedor en el api codificar y decodificar la respuesta
+
                     port_80_container=container['port_number_80_container']
                     url='http://localhost:'+port_80_container+'/domjudge/public/login.php'
                     course['url']=url
