@@ -1,8 +1,7 @@
 $(document).ready(function() {
     $('select').material_select();
     $('.collapsible').collapsible();
-
-    
+    $('.tabs').tabs();   
 
     
 
@@ -58,11 +57,59 @@ $(document).ready(function() {
     });
 
 
+    $('a.btn-play-function').click(function() {
+        var id_object = $(this).attr('id');
+        var id_course = id_object.substring(9, (id_object.length));
+
+        $.ajax({
+           type: "get",
+           data:{'id_course':id_course},
+           url:"play_container/",
+           async: false,
+           success:function(res){
+             alert(res.message)
+           },
+         });
+
+       });
+
+     $('a.btn-stop-function').click(function() {
+        var id_object = $(this).attr('id');
+        var id_course = id_object.substring(9, (id_object.length));
+
+        $.ajax({
+           type: "get",
+           data:{'id_course':id_course},
+           url:"stop_container/",
+           async: false,
+           success:function(res){
+             alert(res.message)
+           },
+         });
+
+       });
 
 
-    
+    $('.btn-remove-function').click(function() {
+        var id_object = $(this).attr('id');
+        var id_course = id_object.substring(9, (id_object.length));
 
-    
+        $.ajax({
+           type: "get",
+           data:{'id_course':id_course},
+           url:"remove_container/",
+           async: false,
+           success:function(res){
+             alert(res.message)
+           },
+         });
+
+       });
+
+    $('.btn-logs-function').click(function() {
+        //alert("presiono logs");
+        //var id_container =
+    });
 
 
 

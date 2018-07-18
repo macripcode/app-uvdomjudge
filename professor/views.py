@@ -1,6 +1,7 @@
 import os
 import json
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.static import serve
@@ -21,6 +22,9 @@ from request.clients import client_public_exist_container
 from request.clients import client_public_run_container
 from request.clients import set_pass_professor
 from request.clients import client_professor_get_port_80_container
+from request.clients import client_professor_start_container
+from request.clients import client_professor_stop_container
+
 
 
 def professor_profile(request):
@@ -51,23 +55,18 @@ def professor_profile(request):
                 print("response_2")
                 print(response_2)
                 if response_2 == 'true':
-                    id_course = course['id_course']
-                    container_enc=client_public_get_container(id_course)
-                    print("pidio el contenedor")
-                    container_str=container_enc.decode('utf-8')
-                    print(container_str)
-                    container=json.loads(container_str)
-                    #--------hacer funcion para pedir el puerto 80 ---->
-                    #client_professor_get_port_80_container(name_container)
-                    # --------hacer funcion para pedir el puerto 3306 ---->
-                    #----------recuerde para cuando vaya a guardar el contenedor en el api codificar y decodificar la respuesta
+                    course['status']='true'
+                    port_80_container = client_professor_get_port_80_container(course['id_course']).decode('utf-8')
+                    course['url_judge'] = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
+                    course['url_page'] = course['id_course'] + '/course'
+                if response_2 == 'false':
+                    course['status'] = 'false'
+                    course['url_judge'] = 'The container is not running. The virtual judge can not be accessed.'
+                    course['url_page'] = 'The container is not running. The course page can not be accessed.'
 
-                    port_80_container=container['port_number_80_container']
-                    url='http://localhost:'+port_80_container+'/domjudge/public/login.php'
-                    course['url']=url
-                    courses_professor.append(course)
-                    print("courses_professor")
-                    print(courses_professor)
+                courses_professor.append(course)
+                print("courses_professor")
+                print(courses_professor)
 
         if len(courses_professor) == 0:
             messages.error(request, "There's no courses currently.")
@@ -279,15 +278,48 @@ def page_created_course(request):
 def page_fail_course(request):
     return render(request, "profile/fail_course.html")
 
-
-
-
-
 def download_db_domjudge(request,id_course):
     path='/var/lib/docker/volumes/'+id_course+'_backup_db/_data/'
     os.system('cd '+path+' && tar czf domjudge.tar.gz domjudge')
     filepath = '/var/lib/docker/volumes/'+id_course+'_backup_db/_data/domjudge.tar.gz'
     return serve(request, os.path.basename(filepath), os.path.dirname(filepath))
+
+def play_container(request):
+    if request.method == 'GET'  and request.is_ajax():
+        message = ""
+        id_course = request.GET['id_course']
+        response=client_professor_start_container(id_course).decode('utf-8')
+        if response == '200':
+            message = 'the container '+ id_course+' has been resumed'
+        else:
+            message = 'the container ' + id_course + ' has not been resumed'
+    return JsonResponse({'message': message})
+
+def stop_container(request):
+    if request.method == 'GET'  and request.is_ajax():
+        message = ""
+        id_course = request.GET['id_course']
+        response = client_professor_stop_container(id_course).decode('utf-8')
+        if response == '200':
+            message = 'the container '+ id_course+' has been stopped'
+        else:
+            message = 'the container ' + id_course + ' has not been stopped'
+    return JsonResponse({'message': message})
+
+def remove_container(request):
+    if request.method == 'GET'  and request.is_ajax():
+        message = ""
+        id_course = request.GET['id_course']
+        response = client_professor_remove_container(id_course).decode('utf-8')
+        if response == '200':
+            message = 'the container '+ id_course+' has been removed'
+        else:
+            message = 'the container ' + id_course + ' has not been removed'
+    return JsonResponse({'message': message})
+
+
+
+
 
 
 

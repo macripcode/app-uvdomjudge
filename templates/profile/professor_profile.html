@@ -29,169 +29,220 @@
     			<h5 style="color:#424242;">Professor's Profile</h5>
     		{% endblock%}
 
-            {% block options %}
-            <!--li>
-                <div class="collapsible-header"><i class="material-icons">settings</i>Settings</div>
-                <div class="collapsible-body">
-                    <form id="config_profile_form" method ='POST' action=".">
-                        {% csrf_token %}
-                        {{ config_profile_form.as_p }}
-                        <div class="row">
-                    <div class="center">
+            {% block options %}            
+            
+                <ul id="tab_professor_profile" class="tabs ">
+                    <li class="tab col s3">
+                        <a class="tab_professor_profile active" href="#tab_professor_profile_courses_in_charge">Courses in charge</a></li>
+                    <li class="tab col s3"><a class="tab_professor_profile" href="#tab_professor_profile_create_course">Create a course</a></li>
+                </ul>
+                
+                <div id="tab_professor_profile_courses_in_charge" class="col s12">  
+                    <div style="height: 50px;"></div>
+                    <div class="row">
+                        <ul class="collapsible">
+                        {% for course in courses_professor %}
+                            <li>
+                                {% if course.status == 'false' %}
+                                <div class="collapsible-header letter_stop_container"><i class="material-icons">library_books</i>{{ course.id_course }}</div>
+                                <div class="collapsible-body">
+                                    <table>
+                                        <tr>
+                                            <td class="letter_courses">Code:</td>
+                                            <td>{{ course.code_course }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Name:</td>
+                                            <td>{{ course.name_course }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Group:</td>
+                                            <td>{{ course.group_course }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Running:</td>
+                                            <td>{{ course.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses ">Url page:</td>
+                                            <td><a  class="disabled_link" href="{{ course.url_page }}" target="_blank">{{ course.url_page }}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses disabled">Course's virtual judge:</td>
+                                            <td><a class="disabled_link" href="{{ course.url_judge }}" target="_blank">{{ course.url_judge }}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Actions:</td>
+                                            <td>
+                                                <div class="professor_course_actions">
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-play-{{ course.id_course }}" class="btn-play-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1"
+                                                        data-position="top" data-tooltip="Start this container" ><i class="material-icons">play_arrow</i></a>
+                                                    </div>
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-stop-{{ course.id_course }}" class="btn-stop-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Stop this container" ><i class="material-icons">pause</i></a>
+                                                    </div>
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-delete-{{ course.id_course }}" class="btn-delete-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Delete this container" ><i class="material-icons">delete</i></a>
+                                                    </div>
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-logs-{{ course.id_course }}" class="btn-logs-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Show logs from this container" ><i class="material-icons">remove_red_eye</i></a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
 
-                        <button id="btn_settings_submit" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('config_profile_form').submit(); return false;">Create
-                            <i class="material-icons right">send</i>
-                        </button>
+                                {% elif course.status == 'true' %}
+                                <div class="collapsible-header"><i class="material-icons">library_books</i>{{ course.id_course }}</div>
+                                <div class="collapsible-body">
+                                    <table>
+                                        <tr>
+                                            <td class="letter_courses">Code:</td>
+                                            <td>{{ course.code_course }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Name:</td>
+                                            <td>{{ course.name_course }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Group:</td>
+                                            <td>{{ course.group_course }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Running:</td>
+                                            <td>{{ course.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Url page:</td>
+                                            <td><a href="{{ course.url_page }}" target="_blank">{{ course.url_page }}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Course's virtual judge:</td>
+                                            <td><a href="{{ course.url_judge }}" target="_blank">{{ course.url_judge }}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="letter_courses">Actions:</td>
+                                            <td>
+                                                <div class="professor_course_actions">
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-play-{{ course.id_course }}" class="btn-play-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1"
+                                                        data-position="top" data-tooltip="Start this container" ><i class="material-icons">play_arrow</i></a>
+                                                    </div>
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-stop-{{ course.id_course }}" class="btn-stop-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Stop this container" ><i class="material-icons">pause</i></a>
+                                                    </div>
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-remove-{{ course.id_course }}" class="btn-remove-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Remove this container" ><i class="material-icons">delete</i></a>
+                                                    </div>
+                                                    <div class="div-btn-floatin-button">
+                                                        <a id="btn-logs-{{ course.id_course }}" class="btn-logs-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Show logs from this container" ><i class="material-icons">remove_red_eye</i></a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}                    
+                        </ul>                    
                     </div>
                 </div>
+                
+                <div id="tab_professor_profile_create_course" class="col s12">
+                    <div style="height: 50px;"></div>                 
+                    <form id="create_course_form" method ='POST' action=".">
+                    {% csrf_token %}
 
+                        <!--Code of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                                {{ create_course_form.code_course}}
+                                <label for="{{ create_course_form.code_course.id_for_label }}">Code</label>
+                            </div>
+                        </div>
+                        <!--Code of Course-->
+
+                        <!--Name of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                                {{ create_course_form.name_course}}
+                                <label for="{{ create_course_form.name_course.id_for_label }}">Name</label>
+                            </div>
+                        </div>
+                        <!--Name of Course-->
+
+                        <!--Credits of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                                {{ create_course_form.credits_course}}
+                              <label for="{{ create_course_form.credits_course.id_for_label }}">Credits</label>
+                            </div>
+                        </div>
+                        <!--Credits of Course-->
+
+                        <!--Professor of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                                <input type="text" name="{{ create_course_form.professor_course.name }}" readonly value="{{ user.id }}">
+                                <label for="{{ create_course_form.professor_course.id_for_label }}">Professor</label>
+                            </div>
+                        </div>
+                        <!--Professor of Course-->
+
+                        <!--Group of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                              {{ create_course_form.group_course}}
+                              <label for="{{ create_course_form.group_course.id_for_label }}" data-error="Invalid value." data-success="Valid.">Group</label>
+                            </div>
+                            <div>
+                                <p id="error_group_course"></p>
+                            </div>
+                        </div>
+                        <!--Group of Course-->
+
+                        <!--Period of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                                {{ create_course_form.period_course}}
+                                <label for="{{ create_course_form.period_course.id_for_label }}">Period</label>
+                            </div>
+                        </div>
+                        <!--Period of Course-->
+
+                        <!--Year of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                                {{ create_course_form.year_course}}
+                                <label for="{{ create_course_form.year_course.id_for_label }}">Year</label>
+                            </div>
+                        </div>
+                        <!--Year of Course-->
+
+                        <!--Programming Language of Course-->
+                        <div class="row">
+                            <div class="input-field">
+                                {{ create_course_form.programming_language}}
+                                <label for="{{ create_course_form.programming_language.id_for_label }}">Programming Language</label>
+                            </div>
+                        </div>
+                        <!--Programming Language of Course-->
+
+                        <!--Button Create-->
+                        <div class="row">
+                            <div class="center">
+
+                                <button id="btn_create_course_submit" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('create_course_form').submit(); return false;">Create
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                        <!--Button Create-->
                     </form>
                 </div>
-            </li-->
-            <li>
-                <div class="collapsible-header"><i class="material-icons">remove_red_eye</i>Courses in charge</div>
-                <div class="collapsible-body">
-
-
-                <table class="bordered responsive-table">
-                    <thead>
-                        <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Group</th>
-                            <th>Url</th>
-                            <th>
-                                <div class="center-align">
-                                    Download
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for course in courses_professor %}
-
-                        <tr>
-                            <td>{{ course.code_course }}</td>
-                            <td>{{ course.name_course }}</td>
-                            <td>{{ course.group_course }}</td>
-                            <td>
-                                <a href="{{ course.url }}" target="_blank">{{ course.url }}</a>
-                            </td>
-                            <td>
-                                <div class="center-align">
-                                    <a href="download_db/{{ course.id_course }}/"><i class="material-icons">file_download</i></a>
-                                </div>
-
-                            </td>
-
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-
-
-
-
-                </div>
-            </li>
-            <li>
-                <div class="collapsible-header"><i class="material-icons">add_circle_outline</i>Create a course</div>
-                <div class="collapsible-body">
-                    <form id="create_course_form" method ='POST' action=".">
-                {% csrf_token %}
-
-                <!--Code of Course-->
-                <div class="row">
-                    <div class="input-field">
-                        {{ create_course_form.code_course}}
-                        <label for="{{ create_course_form.code_course.id_for_label }}">Code</label>
-                    </div>
-                </div>
-                <!--Code of Course-->
-                
-                <!--Name of Course-->
-                <div class="row">
-                    <div class="input-field">
-                        {{ create_course_form.name_course}}                        
-                        <label for="{{ create_course_form.name_course.id_for_label }}">Name</label>
-                    </div>                  
-                </div>              
-                <!--Name of Course-->
-
-                <!--Credits of Course-->
-                <div class="row">
-                    <div class="input-field">
-                        {{ create_course_form.credits_course}}                   
-                      <label for="{{ create_course_form.credits_course.id_for_label }}">Credits</label>
-                    </div>                  
-                </div>              
-                <!--Credits of Course-->
-
-                <!--Professor of Course-->
-                <div class="row">
-                    <div class="input-field">                        
-                        <input type="text" name="{{ create_course_form.professor_course.name }}" readonly value="{{ user.id }}">
-                        <label for="{{ create_course_form.professor_course.id_for_label }}">Professor</label>
-                    </div>                  
-                </div>              
-                <!--Professor of Course-->
-
-                <!--Group of Course-->
-                <div class="row">
-                    <div class="input-field">
-                      {{ create_course_form.group_course}}
-                      <label for="{{ create_course_form.group_course.id_for_label }}" data-error="Invalid value." data-success="Valid.">Group</label>
-                    </div>
-                    <div>
-                        <p id="error_group_course"></p>                         
-                    </div>                  
-                </div>
-                <!--Group of Course-->
-
-                <!--Period of Course-->
-                <div class="row">
-                    <div class="input-field">
-                        {{ create_course_form.period_course}}
-                        <label for="{{ create_course_form.period_course.id_for_label }}">Period</label>
-                    </div>                  
-                </div>              
-                <!--Period of Course-->
-
-                <!--Year of Course-->
-                <div class="row">
-                    <div class="input-field">
-                        {{ create_course_form.year_course}}
-                        <label for="{{ create_course_form.year_course.id_for_label }}">Year</label>
-                    </div>
-                </div>
-                <!--Year of Course-->
-
-                <!--Programming Language of Course-->
-                <div class="row">
-                    <div class="input-field">
-                        {{ create_course_form.programming_language}}
-                        <label for="{{ create_course_form.programming_language.id_for_label }}">Programming Language</label>
-                    </div>                  
-                </div>              
-                <!--Programming Language of Course-->
-
-                <!--Button Create-->
-                <div class="row">
-                    <div class="center">
-
-                        <button id="btn_create_course_submit" class="btn waves-effect waves-light red darken-4" onclick="document.getElementById('create_course_form').submit(); return false;">Create
-                            <i class="material-icons right">send</i>
-                        </button>
-                    </div>                  
-                </div>                          
-                <!--Button Create-->            
-            </form>
-
-
-
-                </div>
-            </li>            
             {% endblock %}
 
 
@@ -215,13 +266,5 @@
 	                    </div>
 				{% endfor %}
 			{% endif %}
-			<!--display forms errors-->            
-                
-            
-                               
-            
-                                
-            
-
-    		    		
+			<!--display forms errors-->   		
     		{% endblock %}   

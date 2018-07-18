@@ -4,12 +4,17 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from .forms import RegistrationForm
 from request.clients import client_public_get_courses
-from request.clients import get_course_detail
+from request.clients import client_public_get_course
 from request.clients import client_public_get_container
 from request.clients import enroll_student
 from request.clients import client_public_exist_container
 from request.clients import client_public_run_container
 from request.clients import get_user_detail
+from request.clients import client_professor_get_port_80_container
+from request.clients import client_professor_exist_course
+from request.clients import client_professor_get_port_3306_container
+
+
 
 
 def public_page(request):
@@ -36,7 +41,7 @@ def public_page(request):
                     container_enc = client_public_get_container(id_course)
                     container_str = container_enc.decode('utf-8')
                     container = json.loads(container_str)
-                    port_80_container = container['port_number_80_container']
+                    port_80_container = (client_professor_get_port_80_container(id_course)).decode('utf-8')
                     url = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
                     course['url'] = url
                     current_courses.append(course)
@@ -51,54 +56,56 @@ def public_page(request):
 
 
 def enroll_course(request, id_course):
+    context = {}
 
-    course_enc = get_course_detail(id_course)
-    course_str = ((course_enc).decode('utf-8')).replace('Ã³','ó')
-    course = json.loads(course_str )
-    course['professor_name'] = get_professor(course['professor_course'])
-    registration_form = RegistrationForm()
-    context = {
-        "course": course,
-        "registration_form": registration_form,
-    }
+    response1 = client_professor_exist_course(id_course).decode('utf-8')
+    response2 = client_public_exist_container(id_course).decode('utf-8')
+    if response1 == '200' and response2 == '200':
+        course_enc = client_public_get_course(id_course)
+        course_str = ((course_enc).decode('utf-8')).replace('Ã³','ó')
+        course = json.loads(course_str )
+        course['professor_name'] = get_professor(course['professor_course'])
+        registration_form = RegistrationForm()
+        context = {
+            "course": course,
+            "registration_form": registration_form,
+        }
 
-    # ------- getting container with id_course ------------>
+        container_enc = client_public_get_container(id_course)
+        container_str = container_enc.decode('utf-8')
+        container = json.loads(container_str)
 
-    container_bites=client_public_get_container(id_course)
-    container_str=container_bites.decode('utf-8')
-    container=json.loads(container_str)
+        # ------- getting port 3306 from container  ------------>
+        port_number_3306_container = client_professor_get_port_3306_container(id_course).decode('utf-8')
 
-    # ------- getting port 3306 from container  ------------>
-    port_number_3306_container=container['port_number_3306_container']
+        # ------- register student on course  ------------>
+        if request.method == 'POST':
 
-    # ------- register student on course  ------------>
-    if request.method == 'POST':
+            registration_form = RegistrationForm(request.POST)
+            if registration_form.is_valid():
+                code_student = request.POST['code_student']
+                name_student = request.POST['name_student']
+                lastname_student = request.POST['lastname_student']
+                email_student = request.POST['email_student']
 
-        registration_form = RegistrationForm(request.POST)
-        if registration_form.is_valid():
-            code_student = request.POST['code_student']
-            name_student = request.POST['name_student']
-            lastname_student = request.POST['lastname_student']
-            email_student = request.POST['email_student']
+                data = {
+                    "name_container": id_course,
+                    "port_number_3306_container":port_number_3306_container,
+                    "code_student" : code_student,
+                    "name_student" : name_student,
+                    "lastname_student" : lastname_student,
+                    "email_student" : email_student,
+                }
 
-            data = {
-                "name_container": id_course,
-                "port_number_3306_container":port_number_3306_container,
-                "code_student" : code_student,
-                "name_student" : name_student,
-                "lastname_student" : lastname_student,
-                "email_student" : email_student,
-            }
+                data_enc = (json.dumps(data)).encode('utf-8')
+                response3 = enroll_student(data_enc)
+                print("response3")
+                print(response3)
 
-            data_enc=(json.dumps(data)).encode('utf-8')
-            response_1=enroll_student(data_enc)
-
-            print(response_1)
-
-            if response_1.decode('utf-8') == '201':
-                messages.success(request, "You have been successfully registered.")
-            else:
-                messages.error(request, "You could not be registered.")
+                if response3.decode('utf-8') == '201':
+                    messages.success(request, "You have been successfully registered.")
+                else:
+                    messages.error(request, "You could not be registered.")
 
 
     return render(request, "public/enroll_course.html", context)

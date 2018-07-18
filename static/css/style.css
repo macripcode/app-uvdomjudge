@@ -10,6 +10,8 @@
 
 */
 
+
+
 .input-field label {
  color: #b71c1c;
 }
@@ -117,5 +119,51 @@ ul#actions_professor_profile li a i:hover {
   -webkit-transform-origin: 100% 100%;
           transform-origin: 100% 100%;
 }
+
+ul.tabs li a.tab_professor_profile.active{
+  color: #b71c1c !important; 
+}
+
+ul.tabs li a.tab_professor_profile{
+  color: #616161; 
+}
+
+ul.tabs li a.tab_professor_profile:hover{
+  color: #424242; 
+}
+
+.tabs .indicator {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: #b71c1c;
+    will-change: left, right;
+}
+
+.letter_courses {
+    color: #424242;
+    padding-right: 10px;
+    font-weight: bold;
+}
+
+.professor_course_actions{
+  position: relative;
+}
+
+
+.div-btn-floatin-button {
+    display: inline-block;
+    padding-right: 20px;
+}
+
+.letter_stop_container{
+  color: #b71c1c;
+}
+
+.disabled_link{
+  color: gray;
+  pointer-events: none;
+}
+
 
 
