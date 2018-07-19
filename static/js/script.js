@@ -67,9 +67,11 @@ $(document).ready(function() {
            url:"play_container/",
            async: false,
            success:function(res){
-             alert(res.message)
+             alert(res.message);
            },
          });
+
+
 
        });
 
@@ -90,25 +92,39 @@ $(document).ready(function() {
        });
 
 
-    $('.btn-remove-function').click(function() {
+    $('a.btn-remove-function').click(function() {
+        if (window.confirm("If you delete this container his database will be erased too.")) {
+            var id_object = $(this).attr('id');
+            var id_course = id_object.substring(11, (id_object.length));
+
+            $.ajax({
+               type: "get",
+               data:{'id_course':id_course},
+               url:"remove_container/",
+               async: false,
+               success:function(res){
+                 alert(res.message);
+               },
+             });
+
+        }
+
+      });
+
+    $('a.btn-logs-function').click(function() {
         var id_object = $(this).attr('id');
         var id_course = id_object.substring(9, (id_object.length));
 
         $.ajax({
            type: "get",
            data:{'id_course':id_course},
-           url:"remove_container/",
+           url:"logs_container/",
            async: false,
            success:function(res){
-             alert(res.message)
+             alert(res.message);
            },
          });
 
-       });
-
-    $('.btn-logs-function').click(function() {
-        //alert("presiono logs");
-        //var id_container =
     });
 
 

@@ -22,8 +22,15 @@ from request.clients import client_public_exist_container
 from request.clients import client_public_run_container
 from request.clients import set_pass_professor
 from request.clients import client_professor_get_port_80_container
+from request.clients import client_professor_get_port_3306_container
 from request.clients import client_professor_start_container
 from request.clients import client_professor_stop_container
+from request.clients import client_professor_remove_container
+from request.clients import client_professor_show__logs_container
+from request.clients import client_professor_put_container
+from request.clients import client_professor_delete_course
+from request.clients import client_public_run_container
+
 
 
 
@@ -285,23 +292,30 @@ def download_db_domjudge(request,id_course):
     return serve(request, os.path.basename(filepath), os.path.dirname(filepath))
 
 def play_container(request):
+    #have to be stopped
     if request.method == 'GET'  and request.is_ajax():
         message = ""
         id_course = request.GET['id_course']
-        response=client_professor_start_container(id_course).decode('utf-8')
-        if response == '200':
-            message = 'the container '+ id_course+' has been resumed'
+        response = client_professor_start_container(id_course).decode('utf-8')
+        port_80 = client_professor_get_port_80_container(id_course).decode('utf-8')
+        port_3306 = client_professor_get_port_3306_container(id_course).decode('utf-8')
+        response2 = update_container_api(id_course,port_80,port_3306)
+        if response == '200' and response2 == '200':
+            message = 'the container '+ id_course+' has been resumed and api has been update.'
         else:
             message = 'the container ' + id_course + ' has not been resumed'
     return JsonResponse({'message': message})
 
 def stop_container(request):
+    #have to be runing
+
     if request.method == 'GET'  and request.is_ajax():
         message = ""
         id_course = request.GET['id_course']
         response = client_professor_stop_container(id_course).decode('utf-8')
-        if response == '200':
-            message = 'the container '+ id_course+' has been stopped'
+        response2 = update_container_api(id_course, "none", "none")
+        if response == '200' and response2=='200':
+            message = 'the container '+ id_course+' has been stopped and api has been update.'
         else:
             message = 'the container ' + id_course + ' has not been stopped'
     return JsonResponse({'message': message})
@@ -310,13 +324,44 @@ def remove_container(request):
     if request.method == 'GET'  and request.is_ajax():
         message = ""
         id_course = request.GET['id_course']
-        response = client_professor_remove_container(id_course).decode('utf-8')
-        if response == '200':
-            message = 'the container '+ id_course+' has been removed'
+        response = client_public_run_container(id_course).decode('utf-8')
+        #if container is running then stop it
+        if response == 'true':
+            client_professor_stop_container(id_course).decode('utf-8')
+
+        response1 = client_professor_remove_container(id_course).decode('utf-8')
+        if response1 == '200':
+
+            response2 = client_professor_delete_course(id_course).decode('utf-8')
+            if response2 == '200':
+                message = 'the container '+ id_course+' has been removed and api has been update.'
         else:
             message = 'the container ' + id_course + ' has not been removed'
+
     return JsonResponse({'message': message})
 
+def logs_container(request):
+    if request.method == 'GET'  and request.is_ajax():
+        id_course = request.GET['id_course']
+        message = "<---- Logs of Container "+id_course+" ---->\n\n"
+        response = client_professor_show__logs_container(id_course).decode('utf-8')
+        message += response
+
+    return JsonResponse({'message': message})
+
+#Update port 80 and 3306 in container's api
+def update_container_api(name_container, new_port_80, new_port_3306):
+    container_enc = client_public_get_container(name_container)
+    container_str = container_enc.decode('utf-8')
+    container = json.loads(container_str)
+    container['port_number_80_container'] = new_port_80
+    container['port_number_3306_container'] = new_port_3306
+    container2_str = json.dumps(container)
+    container2_enc= container2_str.encode('utf-8')
+    response2 = client_professor_put_container(container2_enc)
+    if response2.decode('utf-8') == '200':
+        return '200'
+    return '500'
 
 
 

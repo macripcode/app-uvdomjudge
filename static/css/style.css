@@ -8,6 +8,10 @@
 
 #424242 grey darken-3
 
+#4caf50 green
+
+#388e3c green darken-2
+
 */
 
 
@@ -156,13 +160,16 @@ ul.tabs li a.tab_professor_profile:hover{
     padding-right: 20px;
 }
 
-.letter_stop_container{
-  color: #b71c1c;
+.letter_play_container{
+  color: #388e3c;
 }
 
 .disabled_link{
   color: gray;
   pointer-events: none;
+}
+
+disabled_btn{
 }
 
 

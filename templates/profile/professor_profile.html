@@ -44,7 +44,7 @@
                         {% for course in courses_professor %}
                             <li>
                                 {% if course.status == 'false' %}
-                                <div class="collapsible-header letter_stop_container"><i class="material-icons">library_books</i>{{ course.id_course }}</div>
+                                <div class="collapsible-header"><i class="material-icons">library_books</i>{{ course.id_course }}</div>
                                 <div class="collapsible-body">
                                     <table>
                                         <tr>
@@ -76,17 +76,17 @@
                                             <td>
                                                 <div class="professor_course_actions">
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-play-{{ course.id_course }}" class="btn-play-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1"
+                                                        <a id="btn-play-{{ course.id_course }}" class="btn-play-function btn-floating btn-small waves-effect waves-light tooltipped green"
                                                         data-position="top" data-tooltip="Start this container" ><i class="material-icons">play_arrow</i></a>
                                                     </div>
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-stop-{{ course.id_course }}" class="btn-stop-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Stop this container" ><i class="material-icons">pause</i></a>
+                                                        <a id="btn-stop-{{ course.id_course }}" class="btn-stop-function disabled_btn btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="This container can not be paused because it is not running." ><i class="material-icons">pause</i></a>
                                                     </div>
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-delete-{{ course.id_course }}" class="btn-delete-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Delete this container" ><i class="material-icons">delete</i></a>
+                                                        <a id="btn-remove-{{ course.id_course }}" class="btn-remove-function btn-floating btn-small waves-effect waves-light tooltipped green" data-position="top" data-tooltip="Delete this container" ><i class="material-icons">delete</i></a>
                                                     </div>
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-logs-{{ course.id_course }}" class="btn-logs-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Show logs from this container" ><i class="material-icons">remove_red_eye</i></a>
+                                                        <a id="btn-logs-{{ course.id_course }}" class="btn-logs-function btn-floating btn-small waves-effect waves-light tooltipped green" data-position="top" data-tooltip="Show logs from this container" ><i class="material-icons">remove_red_eye</i></a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -95,7 +95,7 @@
                                 </div>
 
                                 {% elif course.status == 'true' %}
-                                <div class="collapsible-header"><i class="material-icons">library_books</i>{{ course.id_course }}</div>
+                                <div class="collapsible-header letter_play_container"><i class="material-icons">library_books</i>{{ course.id_course }}</div>
                                 <div class="collapsible-body">
                                     <table>
                                         <tr>
@@ -127,17 +127,17 @@
                                             <td>
                                                 <div class="professor_course_actions">
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-play-{{ course.id_course }}" class="btn-play-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1"
-                                                        data-position="top" data-tooltip="Start this container" ><i class="material-icons">play_arrow</i></a>
+                                                        <a id="btn-play-{{ course.id_course }}" class="btn-play-function disabled_btn btn-floating btn-small waves-effect waves-light tooltipped grey darken-1"
+                                                        data-position="top" data-tooltip="This container can not be started because it is already running." ><i class="material-icons">play_arrow</i></a>
                                                     </div>
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-stop-{{ course.id_course }}" class="btn-stop-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Stop this container" ><i class="material-icons">pause</i></a>
+                                                        <a id="btn-stop-{{ course.id_course }}" class="btn-stop-function btn-floating btn-small waves-effect waves-light tooltipped green" data-position="top" data-tooltip="Stop this container" ><i class="material-icons">pause</i></a>
                                                     </div>
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-remove-{{ course.id_course }}" class="btn-remove-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Remove this container" ><i class="material-icons">delete</i></a>
+                                                        <a id="btn-remove-{{ course.id_course }}" class="btn-remove-function disabled_btn btn-floating btn-small waves-effect waves-light tooltipped green" data-position="top" data-tooltip="Delete this container." ><i class="material-icons">delete</i></a>
                                                     </div>
                                                     <div class="div-btn-floatin-button">
-                                                        <a id="btn-logs-{{ course.id_course }}" class="btn-logs-function btn-floating btn-small waves-effect waves-light tooltipped grey darken-1" data-position="top" data-tooltip="Show logs from this container" ><i class="material-icons">remove_red_eye</i></a>
+                                                        <a id="btn-logs-{{ course.id_course }}" class="btn-logs-function btn-floating btn-small waves-effect waves-light tooltipped green" data-position="top" data-tooltip="Show logs from this container" ><i class="material-icons">remove_red_eye</i></a>
                                                     </div>
                                                 </div>
                                             </td>

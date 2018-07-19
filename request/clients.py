@@ -28,7 +28,14 @@ from .client_professor_remove_container import ClientProfessorRemoveContainer
 from .client_professor_show_logs_container import ClientProfessorShowLogsContainer
 from .client_professor_put_container import ClientProfessorPutContainer
 from .client_professor_open_database_container import ClientProfessorOpenDataBaseContainer
+from .client_professor_delete_course import ClientProfessorDeleteCourse
 
+
+#delete course and associated container from the api
+def client_professor_delete_course(id_course):
+    request = ClientProfessorDeleteCourse()
+    response = request.call(id_course)
+    return response
 
 # Check if the course already exist
 def client_professor_exist_course(id_course):
