@@ -7,7 +7,7 @@ from .client_enroll_public import EnrollStudentPublic
 from .client_public_get_container import ClientPublicGetContainer
 from .client_professor_exist_period import ClientProfessorExistPeriod
 from .client_professor_create_period import ClientProfessorCreatePeriod
-from .client_data_container_professor import ContainerDataProfessorClient
+from .client_professor_get_data_container import ClientProfessorGetDataContainer
 from .client_create_container_professor import CreateContainerProfessor
 from .client_professor_exist_course import ClientProfessorExistCourse
 from .client_professor_filter_by_professor_courses import ClientProfessorFilterByProfessorCourse
@@ -91,7 +91,7 @@ def client_professor_show__logs_container(name_container):
     response = request.call(name_container)
     return response
 
-#make de database more flexible to insert an get querys
+#make de database more flexible to insert an get querys in a running container
 def client_professor_open_database_container(name_container):
     request = ClientProfessorOpenDataBaseContainer()
     response = request.call(name_container)
@@ -163,8 +163,8 @@ def create_user(user):
 
 
 # This function get data of container that is not yet register on api
-def get_data_container(name_container):
-    request = ContainerDataProfessorClient()
+def client_professor_get_data_container(name_container):
+    request = ClientProfessorGetDataContainer()
     response = request.call(name_container)
     return response
 
@@ -220,4 +220,6 @@ def delete_period(id_period):
     request = DeletePeriodAdministratorClient()
     response = request.call(id_period)
     return response
+
+
 

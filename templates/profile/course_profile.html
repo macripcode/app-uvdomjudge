@@ -1,0 +1,98 @@
+{% extends "profile/base.html"%}
+
+
+            
+
+            {% block navbar %}
+            <ul class="right hide-on-med-and-down">                 
+                <li><a href="/uvdomjudge/logout/"><span class="icon-exit"></span></a></li>
+            </ul>
+            {% endblock %} 
+
+
+            {% block collection%}
+            <ul class="collection">
+                <li class="collection-item avatar">
+                    <i class="material-icons circle red darken-3"><span class="icon-book"></span></i>
+                    <span class="title red-text text-darken-3" style="font-weight: 500;">{{ course.name_course }}</span>
+                    <p>
+                        Group:  {{ course.group_course }}<br>
+                        Professor:  {{ course.professor_name }} <br>
+                        Credits:  {{ course.credits_course }}
+                    </p>
+                </li>
+            </ul>
+
+    		{% endblock%}
+
+
+    		{% block title%}    		
+    			<h5 style="color:#424242;">Contests</h5>
+    		{% endblock%}
+
+
+
+
+
+            {% block options %}            
+            <li>
+                <div class="collapsible-header"><i class="material-icons">widgets</i>Contest's Name</div>
+                <div class="collapsible-body" id="div_collapsible">
+
+                       <ul id="tab_professor_profile" class="tabs ">
+                        <li class="tab col s3">
+                            <a class="tab_professor_profile active" href="#tab_course_profile_details">Details</a>
+                        </li>
+                        <li class="tab col s3">
+                            <a class="tab_professor_profile" href="#tab_course_profile_statistics">Statistics</a>
+                        </li>
+                    </ul>
+                    <div id="tab_course_profile_details" class="col s12">
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>Problem 1</td>
+                                    <td>Icon</td>
+                                </tr>
+                                <tr>
+                                    <td>Problem 2</td>
+                                    <td>Icon</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="tab_course_profile_statistics" class="col s12">
+                        <div></div>
+                    </div>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">widgets</i>Contest's Name</div>
+                <div class="collapsible-body"></div>
+            </li>
+            {% endblock %}
+
+
+
+            
+
+    		{% block content%}
+
+			<!--display forms errors-->
+			{% if log_in_form.errors %}
+				{% for field in log_in_form %}
+					{% for error in field.errors %}
+						<div class="card-panel red lighten-4">
+	                        <span>{{ error|escape }}</span>
+	                    </div>
+					{% endfor %}
+				{% endfor %}
+				{% for error in log_in_form.non_field_errors %}
+						<div class="card-panel red lighten-4">
+	                        <span>{{ error|escape }}</span>
+	                    </div>
+				{% endfor %}
+			{% endif %}
+			<!--display forms errors-->   		
+    		{% endblock %}   

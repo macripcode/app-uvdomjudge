@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -13,7 +14,7 @@ from request.clients import client_professor_get_image
 from request.clients import client_professor_run_container
 from request.clients import client_professor_exist_period
 from request.clients import client_professor_create_period
-from request.clients import get_data_container
+from request.clients import client_professor_get_data_container
 from request.clients import create_container
 from request.clients import client_professor_exist_course
 from request.clients import client_professor_filter_by_professor_course
@@ -30,7 +31,9 @@ from request.clients import client_professor_show__logs_container
 from request.clients import client_professor_put_container
 from request.clients import client_professor_delete_course
 from request.clients import client_public_run_container
-
+from request.clients import client_professor_open_database_container
+from request.clients import client_public_get_course
+from request.utils import get_professor
 
 
 
@@ -38,12 +41,11 @@ def professor_profile(request):
     # ------- get courses by professor ------------>
     user = request.user
     id_professor = str(user.id)
-    #---send token too and validate
-    print(id_professor)
     courses_professor_in_api_enc = client_professor_filter_by_professor_course(id_professor)
     courses_professor_in_api_str = (courses_professor_in_api_enc.decode('utf-8')).replace('Ã³','ó')
     courses_professor_in_api = json.loads(courses_professor_in_api_str)
     courses_professor = []
+
     # ------- assigning url to each course ------------>
 
     if len(courses_professor_in_api) == 0:
@@ -53,28 +55,19 @@ def professor_profile(request):
         for i in range(0, len(courses_professor_in_api)):
             course = courses_professor_in_api[i]
             response_1_enc = client_public_exist_container(course['id_course'])
-            response_1 = response_1_enc.decode('utf-8')
-            print("response_1")
-            print(response_1)
-            if response_1 == '200':
+            if response_1_enc.decode('utf-8') == '200':
                 response_2_enc = client_public_run_container(course['id_course'])
-                response_2 = response_2_enc.decode('utf-8')
-                print("response_2")
-                print(response_2)
-                if response_2 == 'true':
+                if response_2_enc.decode('utf-8') == 'true':
                     course['status']='true'
                     port_80_container = client_professor_get_port_80_container(course['id_course']).decode('utf-8')
                     course['url_judge'] = 'http://localhost:' + port_80_container + '/domjudge/public/login.php'
                     course['url_page'] = course['id_course'] + '/course'
-                if response_2 == 'false':
+                if response_2_enc.decode('utf-8') == 'false':
                     course['status'] = 'false'
                     course['url_judge'] = 'The container is not running. The virtual judge can not be accessed.'
                     course['url_page'] = 'The container is not running. The course page can not be accessed.'
 
                 courses_professor.append(course)
-                print("courses_professor")
-                print(courses_professor)
-
         if len(courses_professor) == 0:
             messages.error(request, "There's no courses currently.")
 
@@ -126,14 +119,18 @@ def professor_profile(request):
             }
 
             #Checking if course is not exist
-            response_1=(client_professor_exist_course(id_course)).decode('utf-8')
+            response_1 = (client_professor_exist_course(id_course)).decode('utf-8')
+            print("Verifing if course exist...")
+            print("response_1")
+            print(response_1)
 
             if response_1 == '404':
                 serializer = CourseSerializer(data=data)
                 if serializer.is_valid():
                     # checking if academic period is not exist
                     response_2 = (client_professor_exist_period(data['academic_period'])).decode('utf-8')
-                    print("Checking period")
+                    print("Checking period...")
+                    print("response_2")
                     print(response_2)
 
                     if response_2 == '404':
@@ -156,22 +153,16 @@ def professor_profile(request):
                     # -------creating course on api-------->
 
                     data_str = json.dumps(data)
-                    print("data str")
-                    print(data_str)
                     data_enc = data_str.encode('utf-8')
-                    print("data enc")
-                    print(data_enc )
+                    response_3 = (client_professor_create_course(data_enc)).decode('utf-8')
+                    print("Creating course on api...")
+                    print("response_3")
+                    print(response_3)
 
-                    response_3 = client_professor_create_course(data_enc)
-                    print("respuesta de crear curso")
-                    print(response_3.decode('utf-8'))
-
-
-                    if response_3.decode('utf-8') == '201':
+                    if response_3 == '201':
                         # -------creating container -------->
                         id_image = programming_language.encode('utf-8')
                         image_data = json.loads((client_professor_get_image(id_image)).decode('utf-8'))
-
                         image = image_data['name_image']
                         name_vol_container = id_course + "_backup_db"
 
@@ -183,42 +174,34 @@ def professor_profile(request):
 
                         data_container_str = json.dumps(data_container)
                         data_container_enc = data_container_str.encode('utf-8')
-                        response_4 = client_professor_run_container(data_container_enc)
-                        print("response 4")
-                        print(type(response_4))
+                        response_4 = (client_professor_run_container(data_container_enc)).decode('utf-8')
+                        time.sleep(8)
+                        print("Creating container and executing...")
+                        print("response_4")
                         print(response_4)
                         #------ the container has been created------->
-                        if response_4.decode('utf-8') == '0':
+                        if response_4 == '200':
                             response_5_enc = client_public_run_container(id_course)
                             response_5 = response_5_enc.decode('utf-8')
-                            print("container is running?")
-                            print(type(response_5))
+                            print("Verifing if container is running...")
+                            print("response_5")
                             print(response_5)
 
                             if response_5 == 'true':
-                                # ------ the container is up------->
-                                print("contenedor corriendo")
-                                print("id curso")
-                                print(id_course)
-                                #-------check if container is running------->
-                                data_container = get_data_container(id_course)
-                                print("datos contenedor")
-                                print(type(data_container))
-                                print(data_container)
-                                response_6 = create_container(data_container)
-                                print("container registrado")
-                                print(type(response_6))
+                                response_6 = (client_professor_open_database_container(id_course)).decode('utf-8')
+                                time.sleep(4)
+                                print("Registe user in database...")
+                                print("response_6")
                                 print(response_6)
 
-                                if response_6.decode('utf-8') == '201':
+                                #-------check if container is running------->
+                                data_container = client_professor_get_data_container(id_course)
+                                response_7 = create_container(data_container)
+                                print("Register container into api...")
+                                print("response_7")
+                                print(response_7)
 
-                                    # modificar contrasena de admin
-                                    print("id del curso")
-                                    print(id_course)
-                                    print("id profesor")
-                                    print(id_professor)
-
-
+                                if response_7.decode('utf-8') == '201':
                                     data_set_pass = {
                                         "id_professor" : id_professor,
                                         "name_professor": str(user.first_name),
@@ -226,41 +209,26 @@ def professor_profile(request):
                                         "email_professor" : str(user.email),
                                         "id_course" : id_course,
                                     }
-                                    print("datos profe")
-                                    print(data_set_pass)
 
                                     data_set_pass_str = json.dumps(data_set_pass)
-                                    print("data_set_pass_str")
-                                    print(data_set_pass_str)
-                                    print(type(data_set_pass_str))
-
                                     data_set_pass_enc = data_set_pass_str.encode('utf-8')
-                                    print("data_set_pass_enc")
-                                    print(data_set_pass_enc)
-                                    print(type(data_set_pass_enc))
+                                    response_8 = (set_pass_professor(data_set_pass_enc)).decode('utf-8')
+                                    print("Creating user asociated to professor in database...")
+                                    print("response_8")
+                                    print(response_8)
 
-                                    response_7 = set_pass_professor(data_set_pass_enc)
-                                    print("response_7")
-                                    print("el lazo 1")
-                                    print(response_7)
-
-                                    if response_7.decode('utf-8') == '201':
-
+                                    if response_8 == '201':
                                         return redirect("created_course/")
                                     else:
                                         return redirect("fail_course/")
-
+                                else:
+                                    messages.error(request, "The container associated to the course could not be registered on Api.")
                             else:
                                 messages.error(request, "The container associated to the course is not in execution.")
-
-
-
-
-
                         else:
                             messages.error(request, "The container associated to the course could not be executed.")
                     else:
-                        messages.error(request, "This course can not be created.")
+                        messages.error(request, "This course could not be created.")
 
                 else:
                     print(serializer.errors)
@@ -270,14 +238,8 @@ def professor_profile(request):
                 messages.error(request, "This course already exists.")
 
 
-
-
-        elif config_profile_form.is_valid():
-            print("es formulario de configuracion")
-
-
     return render(request, "profile/professor_profile.html", context)
-    #return HttpResponseRedirect("/profile/professor_profile.html", context)
+
 
 def page_created_course(request):
     return render(request, "profile/created_course.html")
@@ -363,7 +325,17 @@ def update_container_api(name_container, new_port_80, new_port_3306):
         return '200'
     return '500'
 
+def course_profile(request, id_course):
+    print(id_course)
+    context = {}
+    course_enc = client_public_get_course(id_course)
+    course_str = ((course_enc).decode('utf-8')).replace('Ã³','ó')
+    course = json.loads(course_str)
+    course['professor_name'] = get_professor(course['professor_course'])
 
+    context["course"] = course
+
+    return render(request, "profile/course_profile.html", context)
 
 
 

@@ -4,7 +4,7 @@ import pika
 import uuid
 
 
-class ContainerDataProfessorClient(object):
+class ClientProfessorGetDataContainer(object):
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 

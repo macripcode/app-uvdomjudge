@@ -1,6 +1,5 @@
 import json
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.shortcuts import render
 from .forms import RegistrationForm
 from request.clients import client_public_get_courses
@@ -13,6 +12,7 @@ from request.clients import get_user_detail
 from request.clients import client_professor_get_port_80_container
 from request.clients import client_professor_exist_course
 from request.clients import client_professor_get_port_3306_container
+from request.utils import get_professor
 
 
 
@@ -49,9 +49,9 @@ def public_page(request):
         if len(current_courses) == 0:
             messages.error(request, "There's no courses currently.")
 
-        context={
-            "current_courses": current_courses,
-        }
+    context={
+        "current_courses": current_courses,
+    }
     return render(request, "public/get_courses.html", context)
 
 
@@ -111,12 +111,8 @@ def enroll_course(request, id_course):
     return render(request, "public/enroll_course.html", context)
 
 
-#This function get all the professor from db
-def get_professor(id_professor):
 
-    professor=User.objects.get(id=id_professor);    
-    return str(professor.first_name)+" "+str(professor.last_name)
-    
+
 
     
 
