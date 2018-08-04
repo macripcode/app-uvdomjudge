@@ -29,6 +29,7 @@ from .client_professor_show_logs_container import ClientProfessorShowLogsContain
 from .client_professor_put_container import ClientProfessorPutContainer
 from .client_professor_open_database_container import ClientProfessorOpenDataBaseContainer
 from .client_professor_delete_course import ClientProfessorDeleteCourse
+from .client_professor_get_data_contest_container import ClientProfessorGetDataContestContainer
 
 
 #delete course and associated container from the api
@@ -221,5 +222,9 @@ def delete_period(id_period):
     response = request.call(id_period)
     return response
 
-
+#get de data about contest in container
+def client_professor_get_data_contest_container(name_container):
+    request = ClientProfessorGetDataContestContainer()
+    response = request.call(name_container)
+    return response
 

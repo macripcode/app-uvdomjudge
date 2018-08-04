@@ -1,5 +1,7 @@
 import time
 from django import forms
+from django.forms import ModelForm
+from .models import Rubric
 
 
 CODE_SUBJECTS_CHOICES = (
@@ -54,13 +56,13 @@ class CreateCourseForm(forms.Form):
     programming_language = forms.ChoiceField(widget=forms.Select(),choices=LANGUAGES_CHOICES)
 
 
-class ConfigProfileForm(forms.Form):
-    id_user = forms.CharField(max_length=100)
-    username = forms.CharField(max_length=100)
-    first_name = forms.CharField(max_length=100)
-    last_name = forms.CharField(max_length=100)
-    email = forms.CharField(max_length=100)
 
-
-
+class RubricForm(ModelForm):
+    class Meta:
+        model = Rubric
+        fields = ['terminal_objetive','activity','weight', 'problem_id', 'contest_id']
+        widgets = {
+            'terminal_objetive': forms.Textarea,
+            'activity': forms.Textarea,
+        }
 

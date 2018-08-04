@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.static import serve
 from .forms import CreateCourseForm
-from .forms import ConfigProfileForm
+from .forms import RubricForm
 from request.serializers import CourseSerializer
 from request.clients import client_professor_create_course
 from request.clients import client_professor_get_image
@@ -34,6 +34,7 @@ from request.clients import client_public_run_container
 from request.clients import client_professor_open_database_container
 from request.clients import client_public_get_course
 from request.utils import get_professor
+from request.clients import client_professor_get_data_contest_container
 
 
 
@@ -82,12 +83,12 @@ def professor_profile(request):
         'class': 'validate',
     }
     create_course_form.fields['professor_course'].widget.attrs = {'id': 'input_professor_course',}
-    config_profile_form = ConfigProfileForm()
+
+
 
     context={
         'courses_professor': courses_professor,
         'create_course_form': create_course_form,
-        'config_profile_form': config_profile_form,
     }
 
     if request.method == 'POST':
@@ -326,14 +327,24 @@ def update_container_api(name_container, new_port_80, new_port_3306):
     return '500'
 
 def course_profile(request, id_course):
-    print(id_course)
-    context = {}
+    data_str = client_professor_get_data_contest_container(id_course).decode('utf-8')
+    context = json.loads(data_str)
     course_enc = client_public_get_course(id_course)
     course_str = ((course_enc).decode('utf-8')).replace('Ã³','ó')
     course = json.loads(course_str)
     course['professor_name'] = get_professor(course['professor_course'])
-
     context["course"] = course
+    rubric_form = RubricForm()
+    rubric_form.fields['terminal_objetive'].widget.attrs = {
+        'id': 'id_textarea_term_obj_'+id_course,
+        'class': 'materialize-textarea',
+    }
+    rubric_form.fields['activity'].widget.attrs = {
+        'id': 'id_textarea_activity_' + id_course,
+        'class': 'materialize-textarea',
+    }
+    context['rubric_form'] = rubric_form
+    print(context)
 
     return render(request, "profile/course_profile.html", context)
 

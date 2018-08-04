@@ -33,44 +33,190 @@
 
 
 
-
-            {% block options %}            
+            {% block options %}
+            {% for contest in contests%}
             <li>
-                <div class="collapsible-header"><i class="material-icons">widgets</i>Contest's Name</div>
+                <div class="collapsible-header"><i class="material-icons">widgets</i>{{ contest.1 }}</div>
                 <div class="collapsible-body" id="div_collapsible">
 
-                       <ul id="tab_professor_profile" class="tabs ">
-                        <li class="tab col s3">
-                            <a class="tab_professor_profile active" href="#tab_course_profile_details">Details</a>
-                        </li>
-                        <li class="tab col s3">
-                            <a class="tab_professor_profile" href="#tab_course_profile_statistics">Statistics</a>
-                        </li>
-                    </ul>
-                    <div id="tab_course_profile_details" class="col s12">
-                        <div>
-                            <table>
-                                <tr>
-                                    <td>Problem 1</td>
-                                    <td>Icon</td>
-                                </tr>
-                                <tr>
-                                    <td>Problem 2</td>
-                                    <td>Icon</td>
-                                </tr>
-                            </table>
+                    <div class="left-align">
+                        <p class="title_inside_div" >Details</p>
+
+                        <div id="tab_course_profile_details" class="col s12" >
+                            <div class="col s6">
+                                <table>
+                                    {% for problem in contest.3 %}
+                                    <tr>
+                                        <td>
+                                            <div class="inside_div icon_inside_div">
+                                                <i class="material-icons">add_box</i><a class="span_text_icon modal-trigger" href="#modal_problem_id_{{ problem.0 }}">{{ problem.1 }}</a>
+                                            </div>
+
+                                            <!-- Modal Structure -->
+                                            <div id="modal_problem_id_{{ problem.0 }}" class="modal">
+                                                <div class="modal-content">
+                                                    <p class="title_problem_modal">{{ problem.1 }}</p>
+                                                    <form id="edit_problem_contest_form_probid_{{ problem.0 }}" class="col s12" method ='POST' action="#">
+                                                        {% csrf_token %}
+                                                        <!--Terminal Objective-->
+                                                        <div class="row">
+                                                            <div class="input-field">
+                                                                {{ rubric_form.terminal_objetive}}
+                                                                <label for="{{ rubric_form.terminal_objetive.id_for_label }}">Terminal Objective</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--Terminal Objective-->
+                                                        <!--Activity-->
+                                                        <div class="row">
+                                                            <div class="input-field">
+                                                                {{ rubric_form.activity}}
+                                                                <label for="{{ rubric_form.activity.id_for_label }}">Activity</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--Activity-->
+
+                                                        <!--weight-->
+                                                        <div class="row">
+                                                            <div class="input-field">
+                                                                {{ rubric_form.weight}}
+                                                                <label for="{{ rubric_form.weight.id_for_label }}">Weight</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--weight-->
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="col s12">
+                                                        <div class="center-align">
+                                                            <button id="btn_edit_problem_contest_form_probid_{{ problem.0 }}" class="modal-close btn waves-effect waves-light red darken-4" onclick="document.getElementById('edit_problem_contest_form_probid_{{ problem.0 }}').submit(); return false;">
+                                                                Save<i class="material-icons right">send</i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <!-- End Modal Structure -->
+
+
+                                        </td>
+                                    </tr>
+
+                                    {% endfor %}
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <div id="tab_course_profile_statistics" class="col s12">
-                        <div></div>
-                    </div>
 
+                    <div class="left-align">
+                        <p class="title_inside_div" >Statistics</p>
+
+                        {% for attemp in number_of_attempts%}
+                            {% if contest.0 == attemp.0 %}
+                            <div class="row">
+                                <div id="container_probid_attemp_{{ attemp.1 }}" class="col s6" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                                <script type="text/javascript">
+
+                                Highcharts.chart('container_probid_attemp_{{ attemp.1 }}', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie',
+                                    height: 300,
+                                },
+                                title: {
+                                    text: 'Number of Attemps: {{ attemp.2 }}'
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                            style: {
+                                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Brands',
+                                    colorByPoint: true,
+                                    data: [
+                                    {% for n in attemp.3 %}
+                                        {
+                                            name: '{{ n.1 }} attemps',
+                                            y: {{ n.0 }},
+                                        },
+                                    {% endfor %}
+                                    ]
+                                }]
+                                });
+                                </script>
+                                <div id="container_probid_submissions_{{ attemp.1 }}" class="col s6" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                                <script type="text/javascript">
+                                {{attemp.4.0}}
+                                {{attemp.4.1}}
+
+                                Highcharts.chart('container_probid_submissions_{{ attemp.1 }}', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie',
+                                    height: 300,
+                                },
+                                title: {
+                                    text: 'Submission vs. no Submission: {{ attemp.2 }}'
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name} {point.y}</b> = {point.percentage:.1f} %',
+                                            style: {
+                                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Brands',
+                                    colorByPoint: true,
+                                    data: [
+
+                                        {
+                                            name: 'Submissions',
+                                            y: {{  attemp.4.0 }},
+                                        },
+                                        {
+                                            name: 'No Submissions',
+                                            y: {{  attemp.4.1 }},
+                                        },
+                                    ]
+                                }]
+                                });
+                                </script>
+
+                            </div>
+
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
                 </div>
             </li>
-            <li>
-                <div class="collapsible-header"><i class="material-icons">widgets</i>Contest's Name</div>
-                <div class="collapsible-body"></div>
-            </li>
+            {% endfor %}
             {% endblock %}
 
 

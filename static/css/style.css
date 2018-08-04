@@ -12,6 +12,8 @@
 
 #388e3c green darken-2
 
+#757575 grey darken-1
+
 */
 
 
@@ -170,6 +172,32 @@ ul.tabs li a.tab_professor_profile:hover{
 }
 
 disabled_btn{
+}
+
+p.title_inside_div {
+    color: #424242;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-family: arial;
+}
+
+.inside_div{
+    display: inline-block;
+
+}
+
+.span_text_icon {
+    padding-left: 15px;
+    position: absolute;
+    color: #757575;
+    cursor: pointer;
+}
+
+.title_problem_modal{
+    color: #616161;
+    font-size: 18px;
+    font-weight:bold;
+
 }
 
 

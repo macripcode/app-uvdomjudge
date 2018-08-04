@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,7 +10,15 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'icon/style.css' %}">
     </head>
-    <body>       
+    <body>
+        <script src="{% static 'js/jquery.js' %}"></script>
+        <script src="{% static 'js/materialize.js' %}"></script>
+        <script src="{% static 'js/highcharts.js' %}"></script>
+        <script src="{% static 'js/modules/exporting.js' %}"></script>
+        <script src="{% static 'js/modules/export-data.js' %}"></script>
+        <script src="{% static 'js/script.js' %}"></script>
+
+
 
         <nav id="nav-bar">
             <div class="nav-wrapper">
@@ -86,11 +95,7 @@
     		{% endblock %}
     		
 			   		
-    	</div>       
-
-        <script src="{% static 'js/jquery.js' %}"></script>
-        <script src="{% static 'js/materialize.js' %}"></script>
-        <script src="{% static 'js/script.js' %}"></script>
+    	</div>
     </body>
 </html>
 
