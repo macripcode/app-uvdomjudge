@@ -4,8 +4,6 @@ $(document).ready(function() {
     $('.tabs').tabs();
     $('.modal').modal();
 
-    
-
 
 
     $('#password_retype_input').blur(function() {
@@ -128,6 +126,38 @@ $(document).ready(function() {
 
     });
 
+
+    $('.btn_rubricform').click(function() {
+        var result = ($(this).attr('id')).split("_");
+        var id_contest = result[1];
+        var id_problem = result[2];
+        var terminal_objetive = $('#rubricform_terminal_objetive_'+id_contest+'_'+id_problem).val();
+        var activity = $('#rubricform_activity_'+id_contest+'_'+id_problem).val();
+        var weight = $('#rubricform_weight_'+id_contest+'_'+id_problem).val();
+        var approved = $('#rubricform_approved_'+id_contest+'_'+id_problem).val();
+        var notapproved = $('#rubricform_not_approved_'+id_contest+'_'+id_problem).val();
+
+
+        $.ajax({
+           type: 'get',
+           data: {
+            'id_contest' : id_contest,
+            'id_problem' : id_problem,
+            'terminal_objetive' : terminal_objetive,
+            'activity' : activity,
+            'weight' : weight,
+            'approved': approved,
+            'notapproved': notapproved,
+            },
+           dataType: "json",
+           url:"save_rubric/",
+           async: false,
+           success: function(res){
+             alert(res.message)
+           }
+        });
+
+    });
 
 
 });

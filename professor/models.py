@@ -1,8 +1,11 @@
 from django.db import models
 
 class Rubric(models.Model):
+    course_id = models.CharField(max_length=100, default='')
     terminal_objetive = models.CharField(max_length=500)
     activity = models.CharField(max_length=500)
+    approved = models.CharField(max_length=500,  default='')
+    notapproved = models.CharField(max_length=500,  default='')
     weight = models.PositiveIntegerField()
     problem_id = models.IntegerField()
     contest_id = models.IntegerField()

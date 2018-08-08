@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.views.static import serve
 from .forms import CreateCourseForm
 from .forms import RubricForm
+from .models import Rubric, Evaluation
 from request.serializers import CourseSerializer
 from request.clients import client_professor_create_course
 from request.clients import client_professor_get_image
@@ -35,6 +36,7 @@ from request.clients import client_professor_open_database_container
 from request.clients import client_public_get_course
 from request.utils import get_professor
 from request.clients import client_professor_get_data_contest_container
+import xlsxwriter as xlsw
 
 
 
@@ -327,8 +329,12 @@ def update_container_api(name_container, new_port_80, new_port_3306):
     return '500'
 
 def course_profile(request, id_course):
+    if request.method == 'GET' and request.is_ajax():
+        print ("cositas")
+
     data_str = client_professor_get_data_contest_container(id_course).decode('utf-8')
     context = json.loads(data_str)
+    generate_file_rubric_and_evaluation_for_contest(context, id_course)
     course_enc = client_public_get_course(id_course)
     course_str = ((course_enc).decode('utf-8')).replace('Ã³','ó')
     course = json.loads(course_str)
@@ -346,7 +352,119 @@ def course_profile(request, id_course):
     context['rubric_form'] = rubric_form
     print(context)
 
+
     return render(request, "profile/course_profile.html", context)
+
+
+def save_rubric(request, id_course):
+    if request.method == 'GET'  and request.is_ajax():
+        message = ""
+
+        id_contest =  request.GET['id_contest']
+        id_problem =  request.GET['id_problem']
+        terminal_objetive =  request.GET['terminal_objetive']
+        activity =  request.GET['activity']
+        weight =  request.GET['weight']
+        approved = request.GET['approved']
+        notapproved = request.GET['notapproved']
+
+
+        rubric = Rubric(
+            course_id=id_course,
+            terminal_objetive=terminal_objetive,
+            activity=activity,
+            weight=weight,
+            approved=approved,
+            notapproved=notapproved,
+            problem_id=id_problem,
+            contest_id=id_contest
+
+        )
+
+        rubric.save()
+        message += "Rubric has been saved."
+
+    else:
+        message += "Rubric has not been saved"
+
+    return JsonResponse({'message': message})
+
+def generate_file_rubric_and_evaluation_for_contest(context, id_course):
+
+    for contest in context['contests']:
+        workbook = xlsw.Workbook('static/rubric_contest_'+str(contest[0])+'.xlsx')
+        worksheet = workbook.add_worksheet()
+        current_row = 0
+        for problem in contest[3]:
+            #--formats cell -->
+            format_problem_title = workbook.add_format({
+                'bold': 1,
+                'border': 1,
+                'align': 'center',
+                'valign': 'vcenter'
+            })
+            normal = workbook.add_format({
+                'border': 1,
+                'text_wrap': 1,
+                'valign':'vcenter'
+            })
+            normal.set_align('vjustify')
+            bold =  workbook.add_format({
+                'border': 1,
+                'bold': 1
+            })
+
+            center = workbook.add_format({
+                'align': 'center',
+                'border': 1,
+                'valign':'vcenter'
+            })
+            # --formats cell --->
+            # -- Adding cells -->
+
+            worksheet.set_row(current_row, 30)
+            worksheet.set_column('A:E', 20)
+            worksheet.write(current_row, 0, "Problem:" , format_problem_title)
+            worksheet.merge_range(current_row,1,current_row,4, problem[1], format_problem_title)
+
+            current_row+=1
+
+            worksheet.write(current_row, 0, "Terminal Objetive",bold)
+            worksheet.write(current_row, 1, "Activity",bold)
+            worksheet.write(current_row, 2, "Weigth",bold)
+            worksheet.write(current_row, 3, "Level 4: 5.0",bold)
+            worksheet.write(current_row, 4, "Level 1: 0.0",bold)
+
+            current_row += 1
+
+            #--Get rubric for each problem---->
+            try:
+                rubric = Rubric.objects.get(problem_id=problem[0])
+                worksheet.set_row(current_row, 100)
+                worksheet.write(current_row, 0, rubric.terminal_objetive,normal)
+                worksheet.write(current_row, 1, rubric.activity, normal)
+                worksheet.write(current_row, 2, rubric.weight, center)
+                worksheet.write(current_row, 3, rubric.approved, normal)
+                worksheet.write(current_row, 4, rubric.notapproved, normal)
+
+            except Rubric.DoesNotExist:
+                print ("rubric does not exist.")
+            # --Get rubric for each problem---->
+
+
+
+            current_row += 3
+            # -- Adding cells -->
+
+
+
+
+
+    #fila entera nombre de ejercicio
+    #columna titulo
+    #objetivo terminal, actividad, peso, nivel4, nivel1
+    #columna valores para cada titulo
+    return 0
 
 
 

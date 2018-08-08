@@ -1,4 +1,6 @@
 {% extends "profile/base.html"%}
+{% load static %}
+{% static "" as baseUrl %}
 
 
             
@@ -40,7 +42,7 @@
                 <div class="collapsible-body" id="div_collapsible">
 
                     <div class="left-align">
-                        <p class="title_inside_div" >Details</p>
+                        <p class="title_inside_div" >Set Rubrics</p>
 
                         <div id="tab_course_profile_details" class="col s12" >
                             <div class="col s6">
@@ -56,21 +58,24 @@
                                             <div id="modal_problem_id_{{ problem.0 }}" class="modal">
                                                 <div class="modal-content">
                                                     <p class="title_problem_modal">{{ problem.1 }}</p>
-                                                    <form id="edit_problem_contest_form_probid_{{ problem.0 }}" class="col s12" method ='POST' action="#">
+                                                    <form id="rubricform_{{ contest.0 }}_{{ problem.0 }}" class="col s12" method ='POST' action="#">
                                                         {% csrf_token %}
+
+                                                        <input id="rubricform_id_contest" value="{{ contest.0 }}" style="display:none;" />
+                                                        <input id="rubricform_id_problem" value="{{ problem.0 }}" style="display:none;" />
                                                         <!--Terminal Objective-->
                                                         <div class="row">
                                                             <div class="input-field">
-                                                                {{ rubric_form.terminal_objetive}}
-                                                                <label for="{{ rubric_form.terminal_objetive.id_for_label }}">Terminal Objective</label>
+                                                                 <textarea id="rubricform_terminal_objetive_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                <label for="rubricform_terminal_objetive_{{ contest.0 }}_{{ problem.0 }}.id_for_label">Terminal Objective</label>
                                                             </div>
                                                         </div>
                                                         <!--Terminal Objective-->
                                                         <!--Activity-->
                                                         <div class="row">
                                                             <div class="input-field">
-                                                                {{ rubric_form.activity}}
-                                                                <label for="{{ rubric_form.activity.id_for_label }}">Activity</label>
+                                                                 <textarea id="rubricform_activity_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                <label for="rubricform_activity_{{ contest.0 }}_{{ problem.0 }}.id_for_label">Activity</label>
                                                             </div>
                                                         </div>
                                                         <!--Activity-->
@@ -78,17 +83,35 @@
                                                         <!--weight-->
                                                         <div class="row">
                                                             <div class="input-field">
-                                                                {{ rubric_form.weight}}
-                                                                <label for="{{ rubric_form.weight.id_for_label }}">Weight</label>
+                                                                <input type="number" name="weight" min="0" required="" id="rubricform_weight_{{ contest.0 }}_{{ problem.0 }}">
+                                                                <label for="rubricform_weight_{{ contest.0 }}_{{ problem.0 }}.id_for_label" class="">Weight</label>
                                                             </div>
                                                         </div>
                                                         <!--weight-->
+                                                        <!--Approved and not approved-->
+                                                        <div class="row">
+                                                            <div class="col s6">
+                                                                <div class="input-field">
+                                                                <textarea id="rubricform_approved_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                <label for="rubricform_approved_{{ contest.0 }}_{{ problem.0 }}.id_for_label" class="">Approved</label>
+                                                            </div>
+                                                            </div>
+                                                            <div class="col s6">
+                                                                <div class="input-field">
+                                                                <textarea id="rubricform_not_approved_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                <label for="rubricform_not_approved_{{ contest.0 }}_{{ problem.0 }}.id_for_label" class="">Not Approved</label>
+                                                            </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <!--Approved and not approved-->
+
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <div class="col s12">
                                                         <div class="center-align">
-                                                            <button id="btn_edit_problem_contest_form_probid_{{ problem.0 }}" class="modal-close btn waves-effect waves-light red darken-4" onclick="document.getElementById('edit_problem_contest_form_probid_{{ problem.0 }}').submit(); return false;">
+                                                            <button id="btnrubricform_{{ contest.0 }}_{{ problem.0 }}" class="btn_rubricform modal-close btn waves-effect waves-light red darken-4"   >
                                                                 Save<i class="material-icons right">send</i>
                                                             </button>
                                                         </div>
@@ -106,6 +129,25 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="left-align">
+                        <p class="title_inside_div" >Download Rubric and Evaluation</p>
+
+                        <div id="tab_course_profile_download_files" class="col s12" >
+                            <div class="col s6">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div class="inside_div icon_inside_div">
+                                                <i class="material-icons">file_download</i><a class="span_text_icon modal-trigger" href="{% static "" %}/rubric_contest_{{ contest.0 }}.xlsx" download >Rubric File</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="left-align">
