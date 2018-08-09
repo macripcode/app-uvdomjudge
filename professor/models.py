@@ -6,7 +6,7 @@ class Rubric(models.Model):
     activity = models.CharField(max_length=500)
     approved = models.CharField(max_length=500,  default='')
     notapproved = models.CharField(max_length=500,  default='')
-    weight = models.PositiveIntegerField()
+    weight = models.DecimalField(max_digits=5, decimal_places=2)
     problem_id = models.IntegerField()
     contest_id = models.IntegerField()
 

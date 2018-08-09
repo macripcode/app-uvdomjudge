@@ -391,6 +391,8 @@ def save_rubric(request, id_course):
 
 def generate_file_rubric_and_evaluation_for_contest(context, id_course):
 
+    #------- Generating Rubric File------->
+
     for contest in context['contests']:
         workbook = xlsw.Workbook('static/rubric_contest_'+str(contest[0])+'.xlsx')
         worksheet = workbook.add_worksheet()
@@ -408,10 +410,12 @@ def generate_file_rubric_and_evaluation_for_contest(context, id_course):
                 'text_wrap': 1,
                 'valign':'vcenter'
             })
-            normal.set_align('vjustify')
+            #normal.set_align('vjustify')
             bold =  workbook.add_format({
                 'border': 1,
-                'bold': 1
+                'bold': 1,
+                'align': 'center',
+                'valign': 'vcenter'
             })
 
             center = workbook.add_format({
@@ -429,6 +433,7 @@ def generate_file_rubric_and_evaluation_for_contest(context, id_course):
 
             current_row+=1
 
+            worksheet.set_row(current_row, 30)
             worksheet.write(current_row, 0, "Terminal Objetive",bold)
             worksheet.write(current_row, 1, "Activity",bold)
             worksheet.write(current_row, 2, "Weigth",bold)
@@ -451,19 +456,124 @@ def generate_file_rubric_and_evaluation_for_contest(context, id_course):
                 print ("rubric does not exist.")
             # --Get rubric for each problem---->
 
-
-
             current_row += 3
             # -- Adding cells -->
 
+        workbook.close()
+        # ------- Generating Rubric File------->
+
+        # ------- Generating Evaluation File------->
+        workbook = xlsw.Workbook('static/evaluation_contest_' + str(contest[0]) + '.xlsx')
+        worksheet = workbook.add_worksheet()
+
+        # --formats cell -->
+        format_problem_title = workbook.add_format({
+            'bold': 1,
+            'border': 1,
+            'align': 'center',
+            'valign': 'vcenter'
+        })
+        normal = workbook.add_format({
+            'border': 1,
+            'text_wrap': 1,
+            'valign': 'vcenter'
+        })
+
+        bold = workbook.add_format({
+            'border': 1,
+            'bold': 1,
+            'align': 'center',
+            'valign': 'vcenter'
+        })
+
+        center = workbook.add_format({
+            'align': 'center',
+            'border': 1,
+            'valign': 'vcenter'
+        })
+        # --formats cell --->
+
+        #--------- Header ---------->
+        worksheet.set_row(0, 100)
+        worksheet.set_column(0, 0, 15)
+        worksheet.set_column(1, 1, 40)
+        worksheet.merge_range(0, 0, 0, 1 ,"Terminal Objetive", bold)
+        worksheet.set_row(1,100)
+        worksheet.merge_range(1, 0, 1, 1, "Activity", bold)
+        worksheet.set_row(2, 20)
+        worksheet.merge_range(2, 0, 2, 1, "Weight", bold)
+        worksheet.set_row(3, 20)
+        worksheet.write(3, 0, "Code", bold)
+        worksheet.write(3, 1, "Name", bold)
+        # --------- Header ---------->
+
+        # ----------Writing list students----------------------->
+
+        current_column_evaluation = 0
+        current_row_evaluation = 4
+
+        for student in context['list']:
+            worksheet.write(current_row_evaluation, current_column_evaluation, student[0], normal)
+            current_column_evaluation += 1
+            worksheet.write(current_row_evaluation, current_column_evaluation, student[1], normal)
+            current_column_evaluation = 0
+            current_row_evaluation += 1
+        # ----------Writing list students----------------------->
+
+        #----------Writing Terminal objective, Activity and weight for each problem--->
+        current_column_evaluation = 2
+        current_row_evaluation = 0
+
+        for problem in contest[3]:
+
+            try:
+                #--------Adding rubric to the file ----------------->
+                rubric = Rubric.objects.get(problem_id=problem[0])
+                worksheet.set_column(current_column_evaluation, current_column_evaluation, 30)
+                worksheet.write(current_row_evaluation, current_column_evaluation, rubric.terminal_objetive, normal)
+                current_row_evaluation += 1
+                worksheet.write(current_row_evaluation, current_column_evaluation, rubric.activity, normal)
+                current_row_evaluation += 1
+                worksheet.write(current_row_evaluation, current_column_evaluation, rubric.weight, normal)
+
+                # --------Adding rubric to the file ----------------->
+
+                # ----------Writing evaluation for each student by problem----------------------->
+                current_row_evaluation = 4
+                for e in context['evaluation']:
+                    if e[0]== contest[0] and e[1] == problem[0]:
+                        for evaluations_student in e[2]:
+
+                            worksheet.write_number(current_row_evaluation, current_column_evaluation, (evaluations_student*(int(rubric.weight)/100)))
+                            current_row_evaluation += 1
+                # ----------Writing evaluation for each student by problem---------------------->
+
+                current_column_evaluation +=1
+                current_row_evaluation = 0
 
 
 
+            except Rubric.DoesNotExist:
+                print ("rubric does not exist.")
+            # --Get rubric for each problem---->
 
-    #fila entera nombre de ejercicio
-    #columna titulo
-    #objetivo terminal, actividad, peso, nivel4, nivel1
-    #columna valores para cada titulo
+        from xlsxwriter.utility import xl_rowcol_to_cell
+        from xlsxwriter.utility import xl_range
+
+
+        current_row_evaluation = 4
+
+        worksheet.write((current_row_evaluation-1), current_column_evaluation, "Total", bold)
+
+        for student in context['list']:
+            range_sum = xl_range(current_row_evaluation, 2, current_row_evaluation, (current_column_evaluation-1))
+            cell_to_write = xl_rowcol_to_cell(current_row_evaluation, current_column_evaluation)
+            worksheet.write_formula(cell_to_write, '{=SUM('+range_sum+')}')
+            current_row_evaluation += 1
+
+        workbook.close()
+    # ------- Generating Evaluation File------->
+
     return 0
 
 
