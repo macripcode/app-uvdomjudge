@@ -356,33 +356,64 @@ def course_profile(request, id_course):
     return render(request, "profile/course_profile.html", context)
 
 
+def check_rubric(request, id_course):
+    if request.method == 'GET'  and request.is_ajax():
+        data = {}
+        problem_id = request.GET['problem_id']
+
+        try:
+            rubric = Rubric.objects.get(problem_id=problem_id)
+            data['exists'] = "true"
+            data['terminal_objetive'] = rubric.terminal_objetive
+            data['activity'] = rubric.activity
+            data['approved'] = rubric.approved
+            data['notapproved'] = rubric.notapproved
+            data['weight'] = rubric.weight
+
+        except Rubric.DoesNotExist:
+            data['exists'] = "false"
+
+    return JsonResponse(data)
+
 def save_rubric(request, id_course):
     if request.method == 'GET'  and request.is_ajax():
         message = ""
-
-        id_contest =  request.GET['id_contest']
-        id_problem =  request.GET['id_problem']
+        id_contest = request.GET['id_contest']
+        id_problem = request.GET['id_problem']
         terminal_objetive =  request.GET['terminal_objetive']
         activity =  request.GET['activity']
         weight =  request.GET['weight']
         approved = request.GET['approved']
         notapproved = request.GET['notapproved']
 
+        try:
+            rubric = Rubric.objects.get(problem_id=id_problem)
+            rubric.course_id = id_course
+            rubric.contest_id = id_contest
+            rubric.problem_id = id_problem
+            rubric.terminal_objetive = terminal_objetive
+            rubric.activity = activity
+            rubric.approved = approved
+            rubric.notapproved = notapproved
+            rubric.weight = weight
+            rubric.save()
+            message += "Rubric has been saved"
 
-        rubric = Rubric(
-            course_id=id_course,
-            terminal_objetive=terminal_objetive,
-            activity=activity,
-            weight=weight,
-            approved=approved,
-            notapproved=notapproved,
-            problem_id=id_problem,
-            contest_id=id_contest
+        except Rubric.DoesNotExist:
 
-        )
+            rubric = Rubric(
+                course_id=id_course,
+                terminal_objetive=terminal_objetive,
+                activity=activity,
+                weight=weight,
+                approved=approved,
+                notapproved=notapproved,
+                problem_id=id_problem,
+                contest_id=id_contest
 
-        rubric.save()
-        message += "Rubric has been saved."
+            )
+            rubric.save()
+            message += "Rubric has been saved."
 
     else:
         message += "Rubric has not been saved"

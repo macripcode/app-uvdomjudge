@@ -127,6 +127,34 @@ $(document).ready(function() {
     });
 
 
+    $('.rubric_problem_class').click(function() {
+        var result = ($(this).attr('id')).split("_");
+        var contest_id = result[3];
+        var problem_id = result[5];
+
+        $.ajax({
+           type: 'get',
+           data: { 'problem_id': problem_id },
+           dataType: "json",
+           url:"check_rubric/",
+           async: false,
+           success: function(res){
+             if (res.exists=='true'){
+             $('#rubricform_terminal_objetive_'+contest_id+'_'+problem_id).val(res.terminal_objetive);
+             $('#rubricform_activity_'+contest_id+'_'+problem_id).val(res.activity);
+             $('#rubricform_weight_'+contest_id+'_'+problem_id).val(res.weight);
+             $('#rubricform_approved_'+contest_id+'_'+problem_id).val(res.approved);
+             $('#rubricform_not_approved_'+contest_id+'_'+problem_id).val(res.notapproved);
+            }
+           }
+        });
+
+
+
+    });
+
+
+
     $('.btn_rubricform').click(function() {
         var result = ($(this).attr('id')).split("_");
         var id_contest = result[1];

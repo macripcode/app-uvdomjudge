@@ -51,7 +51,7 @@
                                     <tr>
                                         <td>
                                             <div class="inside_div icon_inside_div">
-                                                <i class="material-icons">add_box</i><a class="span_text_icon modal-trigger" href="#modal_problem_id_{{ problem.0 }}">{{ problem.1 }}</a>
+                                                <i class="material-icons">add_box</i><a id="aref_rubric_contest_{{ contest.0 }}_problem_{{ problem.0 }}" class="span_text_icon modal-trigger rubric_problem_class" href="#modal_problem_id_{{ problem.0 }}">{{ problem.1 }}</a>
                                             </div>
 
                                             <!-- Modal Structure -->
@@ -66,7 +66,7 @@
                                                         <!--Terminal Objective-->
                                                         <div class="row">
                                                             <div class="input-field">
-                                                                 <textarea id="rubricform_terminal_objetive_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                 <textarea id="rubricform_terminal_objetive_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"  placeholder=""></textarea>
                                                                 <label for="rubricform_terminal_objetive_{{ contest.0 }}_{{ problem.0 }}.id_for_label">Terminal Objective</label>
                                                             </div>
                                                         </div>
@@ -74,7 +74,7 @@
                                                         <!--Activity-->
                                                         <div class="row">
                                                             <div class="input-field">
-                                                                 <textarea id="rubricform_activity_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                 <textarea id="rubricform_activity_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea" placeholder=""></textarea>
                                                                 <label for="rubricform_activity_{{ contest.0 }}_{{ problem.0 }}.id_for_label">Activity</label>
                                                             </div>
                                                         </div>
@@ -83,7 +83,7 @@
                                                         <!--weight-->
                                                         <div class="row">
                                                             <div class="input-field">
-                                                                <input type="number" name="weight" min="0" required="" id="rubricform_weight_{{ contest.0 }}_{{ problem.0 }}">
+                                                                <input type="number" name="weight" min="0" required="" id="rubricform_weight_{{ contest.0 }}_{{ problem.0 }}" placeholder="">
                                                                 <label for="rubricform_weight_{{ contest.0 }}_{{ problem.0 }}.id_for_label" class="">Weight</label>
                                                             </div>
                                                         </div>
@@ -92,13 +92,13 @@
                                                         <div class="row">
                                                             <div class="col s6">
                                                                 <div class="input-field">
-                                                                <textarea id="rubricform_approved_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                <textarea id="rubricform_approved_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea" placeholder=""></textarea>
                                                                 <label for="rubricform_approved_{{ contest.0 }}_{{ problem.0 }}.id_for_label" class="">Approved</label>
                                                             </div>
                                                             </div>
                                                             <div class="col s6">
                                                                 <div class="input-field">
-                                                                <textarea id="rubricform_not_approved_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea"></textarea>
+                                                                <textarea id="rubricform_not_approved_{{ contest.0 }}_{{ problem.0 }}" class="materialize-textarea" placeholder=""></textarea>
                                                                 <label for="rubricform_not_approved_{{ contest.0 }}_{{ problem.0 }}.id_for_label" class="">Not Approved</label>
                                                             </div>
                                                             </div>

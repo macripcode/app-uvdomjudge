@@ -16,6 +16,8 @@ from request.clients import create_user
 
 
 def administrator_profile(request):
+
+    print("entra a perfil admin")
     create_user_form = CreateUserForm()
     academic_periods = json.loads((get_periods()).decode('utf-8'))
     print("academics periods")
@@ -50,7 +52,7 @@ def administrator_profile(request):
                 first_name=first_name ,
                 last_name=last_name,
                 email=email,
-                id=id
+                id=int(id)
             )
             user.set_password(password)
             user.save()
@@ -68,8 +70,8 @@ def administrator_profile(request):
                 user.save()
 
             # ------Creating token--->
-            user = User.objects.get(id=id)
-            token = Token.objects.create(user=user)
+            #user = User.objects.get(id=id)
+            #token = Token.objects.create(user=user)
 
             #------Creating info to send api
             data_user = {
@@ -79,7 +81,7 @@ def administrator_profile(request):
                 "first_name": first_name,
                 "last_name": last_name,
                 "email": email,
-                "token": token.key
+                #"token": token.key
             }
 
             data_str = json.dumps(data_user)
@@ -95,14 +97,20 @@ def administrator_profile(request):
             print(response)
 
             if user.has_perm('auth.administrator') or user.has_perm('auth.professor'):
-                return redirect("/uvdomjugde/administrator/created_user")
+                return redirect("created_user/")
             else:
-                return redirect("/uvdomjugde/administrator/fail_user")
+                return redirect("fail_user/")
 
         else:
             print(create_user_form.errors)
 
     return render(request, "profile/administrator_profile.html", context)
+
+
+
+def created_user(request):
+    print("llama a created user")
+    return render(request, "profile/created_user.html")
 
 
 def create_backups(request):
@@ -159,9 +167,7 @@ def create_backups(request):
     print(response)
     return JsonResponse(response)
 
-def created_user(request):
-    print("entro a created user")
-    return render(request, "profile/created_user.html")
+
 
 def fail_user(request):
     return render(request, "profile/fail_created_user.html")

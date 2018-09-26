@@ -9,6 +9,7 @@ from .views import remove_container
 from .views import logs_container
 from .views import course_profile
 from .views import save_rubric
+from .views import check_rubric
 
 
 
@@ -23,6 +24,7 @@ urlpatterns = [
     url(r'^logs_container/', logs_container, name='logs_container'),
     url(r'^(?P<id_course>\d{12}M\d{2})/course/$', course_profile, name='course_profile'),
     url(r'^(?P<id_course>\d{12}M\d{2})/course/save_rubric/', save_rubric, name='save_rubric'),
+    url(r'^(?P<id_course>\d{12}M\d{2})/course/check_rubric/', check_rubric, name='check_rubric'),
     #url(r'^(?P<pk>\d{1})/$', views.image_detail),
 #url(r'^play_container/(?P<id_course>\d{12}M\d{2})/', play_container, name='play_container'),
 ]
